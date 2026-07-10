@@ -55,7 +55,7 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="font-mono flex min-h-screen flex-col overflow-x-hidden bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#f8fafc_65%,#eef2ff_100%)] text-slate-800 antialiased selection:bg-emerald-300 selection:text-slate-950">
+      <body className="flex min-h-screen flex-col overflow-x-hidden bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#f8fafc_65%,#eef2ff_100%)] font-mono text-slate-800 antialiased selection:bg-emerald-300 selection:text-slate-950">
         <AuthProvider>
           <Navbar />
           <main className="flex-grow">{children}</main>

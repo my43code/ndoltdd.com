@@ -121,19 +121,7 @@ export default async function HomePage() {
 
       <section className="relative min-h-screen overflow-hidden bg-slate-950">
         <div className="absolute inset-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover opacity-55"
-            preload="metadata"
-            poster="/images/project1.webp"
-            aria-hidden="true"
-          >
-            <source src="/video/tech-video.mp4" type="video/mp4" />
-          </video>
-
+          <div className="absolute inset-0 bg-[url('/images/project1.webp')] bg-cover bg-center opacity-35" />
           <div className="absolute inset-0 bg-[linear-gradient(125deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.78)_45%,rgba(6,78,59,0.6)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.22),transparent_24%),radial-gradient(circle_at_80%_18%,rgba(250,204,21,0.14),transparent_18%),radial-gradient(circle_at_50%_80%,rgba(59,130,246,0.16),transparent_20%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:56px_56px] opacity-15" />

@@ -15,9 +15,7 @@ function DetailRow({ icon: Icon, label, value, href }) {
     <div className="flex gap-3">
       <Icon className="mt-1 shrink-0 text-emerald-400" />
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
-          {label}
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">{label}</p>
         <p className="mt-1 text-sm leading-7 text-slate-200">{value}</p>
       </div>
     </div>

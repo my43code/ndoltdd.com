@@ -16,7 +16,7 @@ export default function SectionTitle({
         </p>
       ) : null}
 
-      <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-950 md:text-5xl text-gradient animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+      <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-950 md:text-5xl animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
         {title}
       </h2>
 
