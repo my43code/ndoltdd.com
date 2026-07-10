@@ -10,7 +10,13 @@ import Post from "@/models/Post";
 async function getPosts() {
   try {
     await connectMongoDB();
-    const posts = await Post.find().sort({ createdAt: -1 }).lean();
+    const posts = await Post.find(
+      {},
+      { title: 1, summary: 1, image: 1, slug: 1, content: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(8)
+      .lean();
     return { posts };
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {

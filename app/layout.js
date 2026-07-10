@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
 import { Space_Mono } from "next/font/google";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const spaceMono = Space_Mono({
   weight: ["400", "700"],

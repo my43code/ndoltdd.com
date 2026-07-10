@@ -12,7 +12,13 @@ export const revalidate = 3600;
 async function getServices() {
   try {
     await connectMongoDB();
-    return await Service.find().sort({ createdAt: -1 }).lean();
+    return await Service.find(
+      {},
+      { title: 1, shortDescription: 1, description: 1, image: 1, video: 1, link: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .lean();
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {
       console.error("Failed to load services:", error);
@@ -24,7 +30,13 @@ async function getServices() {
 async function getProjects() {
   try {
     await connectMongoDB();
-    return await Project.find().sort({ createdAt: -1 }).lean();
+    return await Project.find(
+      {},
+      { title: 1, shortDescription: 1, description: 1, image: 1, video: 1, link: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .lean();
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {
       console.error("Failed to load projects:", error);
@@ -115,7 +127,8 @@ export default async function HomePage() {
             muted
             playsInline
             className="h-full w-full object-cover opacity-55"
-            preload="auto"
+            preload="metadata"
+            poster="/images/project1.webp"
             aria-hidden="true"
           >
             <source src="/video/tech-video.mp4" type="video/mp4" />

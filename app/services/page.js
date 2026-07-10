@@ -11,7 +11,12 @@ export const revalidate = 3600;
 async function getServices() {
   try {
     await connectMongoDB();
-    return await Service.find().sort({ createdAt: -1 }).lean();
+    return await Service.find(
+      {},
+      { title: 1, shortDescription: 1, description: 1, image: 1, video: 1, link: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .lean();
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {
       console.error("Failed to load services:", error);

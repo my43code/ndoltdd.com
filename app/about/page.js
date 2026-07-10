@@ -15,7 +15,13 @@ export const revalidate = 3600;
 async function getServices() {
   try {
     await connectMongoDB();
-    return await Service.find().sort({ createdAt: -1 }).lean();
+    return await Service.find(
+      {},
+      { title: 1, shortDescription: 1, description: 1, image: 1, video: 1, link: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean();
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {
       console.error("Failed to load services:", error);
@@ -27,7 +33,13 @@ async function getServices() {
 async function getProjects() {
   try {
     await connectMongoDB();
-    return await Project.find().sort({ createdAt: -1 }).lean();
+    return await Project.find(
+      {},
+      { title: 1, shortDescription: 1, description: 1, image: 1, video: 1, link: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean();
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {
       console.error("Failed to load projects:", error);
@@ -39,7 +51,13 @@ async function getProjects() {
 async function getPosts() {
   try {
     await connectMongoDB();
-    return await Post.find().sort({ createdAt: -1 }).lean();
+    return await Post.find(
+      {},
+      { title: 1, summary: 1, image: 1, slug: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean();
   } catch (error) {
     if (process.env.npm_lifecycle_event !== "build") {
       console.error("Failed to load posts:", error);
