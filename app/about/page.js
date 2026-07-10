@@ -10,7 +10,7 @@ import Project from "@/models/Project";
 import Post from "@/models/Post";
 import Service from "@/models/Service";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 async function getServices() {
   try {

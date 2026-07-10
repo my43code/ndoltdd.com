@@ -7,7 +7,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Service from "@/models/Service";
 import Project from "@/models/Project";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 async function getServices() {
   try {

@@ -6,7 +6,7 @@ import MediaFrame from "@/components/MediaFrame";
 import { connectMongoDB } from "@/lib/mongodb";
 import Service from "@/models/Service";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 async function getServices() {
   try {

@@ -5,7 +5,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Image from "next/image";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 async function getPost(slug) {
   try {

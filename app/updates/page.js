@@ -1,4 +1,4 @@
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -103,12 +103,12 @@ export default async function UpdatesPage() {
             </div>
 
             <SlidingShow
-              items={posts.slice(0, 3).map((post, index) => ({
+              items={posts.slice(0, 2).map((post, index) => ({
                 id: String(post._id || index + 1),
                 title: post.title,
                 subtitle: post.summary || post.content?.slice(0, 140),
                 image: post.image || "/images/project1.webp",
-                badge: index === 0 ? "Featured" : index === 1 ? "Latest" : "Insight",
+                badge: index === 0 ? "Featured" : "Latest",
               }))}
             />
           </div>
