@@ -128,7 +128,6 @@ function FileField({ label, accept, onFileSelect, description, capture }) {
         <input
           type="file"
           accept={accept}
-          capture={capture}
           onChange={handleFileSelect}
           className="sr-only"
           aria-label={label}
@@ -743,11 +742,10 @@ export default function AdminPage() {
                 <FileField
                   label="Upload Image"
                   accept="image/*"
-                  capture="environment"
                   onFileSelect={(dataUrl) =>
                     setServiceForm({ ...serviceForm, image: dataUrl })
                   }
-                  description="Tap Browse to select an image from your device or camera."
+                  description="Tap Browse to select an image from your device."
                 />
                 <FormField
                   label="Video URL"
@@ -757,11 +755,10 @@ export default function AdminPage() {
                 <FileField
                   label="Upload Video"
                   accept="video/*"
-                  capture="environment"
                   onFileSelect={(dataUrl) =>
                     setServiceForm({ ...serviceForm, video: dataUrl })
                   }
-                  description="Tap Browse to select a video from your device or camera."
+                  description="Tap Browse to select a video from your device."
                 />
                 <FormField
                   label="Link"
@@ -862,11 +859,10 @@ export default function AdminPage() {
                 <FileField
                   label="Upload Image"
                   accept="image/*"
-                  capture="environment"
                   onFileSelect={(dataUrl) =>
                     setProjectForm({ ...projectForm, image: dataUrl })
                   }
-                  description="Tap Browse to select an image from your device or camera."
+                  description="Tap Browse to select an image from your device."
                 />
                 <FormField
                   label="Video URL"
@@ -876,11 +872,10 @@ export default function AdminPage() {
                 <FileField
                   label="Upload Video"
                   accept="video/*"
-                  capture="environment"
                   onFileSelect={(dataUrl) =>
                     setProjectForm({ ...projectForm, video: dataUrl })
                   }
-                  description="Tap Browse to select a video from your device or camera."
+                  description="Tap Browse to select a video from your device."
                 />
                 <FormField
                   label="Link"
@@ -977,9 +972,8 @@ export default function AdminPage() {
                 <FileField
                   label="Upload Image"
                   accept="image/*"
-                  capture="environment"
                   onFileSelect={(dataUrl) => setPostForm({ ...postForm, image: dataUrl })}
-                  description="Tap Browse to select an image from your device or camera."
+                  description="Tap Browse to select an image from your device."
                 />
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -1183,7 +1177,6 @@ export default function AdminPage() {
                   <FileField
                     label="Upload profile photo"
                     accept="image/*"
-                    capture="environment"
                     onFileSelect={(dataUrl) => setTeamMemberForm({ ...teamMemberForm, image: dataUrl })}
                     description="Use a clear headshot for the About page gallery."
                   />
