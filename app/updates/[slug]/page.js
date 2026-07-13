@@ -38,12 +38,12 @@ export default async function PostDetailPage({ params }) {
     <main className="bg-slate-50">
       <div className="border-b border-slate-200 bg-white/80 px-4 py-4 sm:px-6 backdrop-blur">
         <div className="mx-auto max-w-5xl">
-          <a
+          <Link
             href="/updates"
             className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 transition hover:text-emerald-700 hover:underline"
           >
             Back to Updates
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export default async function PostDetailPage({ params }) {
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700">
             Company update
           </p>
-          <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+          <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
             {post.title || "Update"}
           </h1>
           <p className="mt-4 text-base text-slate-600 md:text-lg">
@@ -65,7 +65,7 @@ export default async function PostDetailPage({ params }) {
         </div>
 
         {post.image ? (
-          <div className="group relative mb-12 h-[260px] overflow-hidden rounded-[2rem] border border-slate-200 shadow-[0_18px_50px_rgba(15,23,42,0.08)] md:h-[480px] transition-transform duration-700 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(15,23,42,0.12)] image-shadow">
+          <div className="group relative mb-8 h-[220px] overflow-hidden rounded-[1.5rem] border border-slate-200 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition-transform duration-700 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(15,23,42,0.12)] sm:mb-12 sm:h-[260px] sm:rounded-[2rem] md:h-[480px] image-shadow">
             <Image
               src={post.image}
               alt={post.title || "Post image"}

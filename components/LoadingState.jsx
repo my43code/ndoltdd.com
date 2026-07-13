@@ -6,12 +6,12 @@ export default function LoadingState({
   subtitle = "Please wait while we load the newest data from the database.",
 }) {
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-16"> 
+    <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16">
       <div className="max-w-3xl space-y-4">
         <p className="inline-flex rounded-full border border-emerald-500/15 bg-emerald-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700">
           {eyebrow}
         </p>
-        <div className="text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
+        <div className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-6xl">
           {title}
         </div>
         <div className="h-14 w-3/4 rounded-3xl bg-slate-200/80" />

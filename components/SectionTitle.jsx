@@ -8,7 +8,7 @@ export default function SectionTitle({
 
   return (
     <div
-      className={`mb-12 max-w-4xl ${isLeftAligned ? "text-left" : "mx-auto text-center"} animate-fade-in-up`}
+      className={`mb-8 max-w-4xl sm:mb-12 ${isLeftAligned ? "text-left" : "mx-auto text-center"} animate-fade-in-up`}
     >
       {eyebrow ? (
         <p className="eyebrow-pill animate-bounce-in transition-transform hover:scale-105">
@@ -16,7 +16,7 @@ export default function SectionTitle({
         </p>
       ) : null}
 
-      <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-950 md:text-5xl animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+      <h2 className="mt-4 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl md:text-5xl animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
         {title}
       </h2>
 

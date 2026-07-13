@@ -3,8 +3,45 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
 import LoadingState from "@/components/LoadingState";
+
+function resultHref(item, fallback) {
+  const link = item?.link?.trim();
+  return link || fallback;
+}
+
+function SearchResultLink({ href, children, className = "" }) {
+  const external = /^https?:\/\//i.test(href);
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className={className}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
+function ResultAction({ label = "Open result" }) {
+  return (
+    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+      {label}
+      <ArrowUpRight size={16} aria-hidden="true" />
+    </span>
+  );
+}
 
 function matchesQuery(item, query) {
   const lowerQuery = (query || "").toString().toLowerCase().trim();
@@ -129,9 +166,9 @@ export default function SearchPage() {
   }, [about, searchTerm]);
 
   return (
-    <section className="min-h-screen bg-slate-50 py-12 px-6">
+    <section className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 sm:py-12">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Search</h1>
             <p className="text-slate-600 mt-2">
@@ -147,7 +184,7 @@ export default function SearchPage() {
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-10 flex flex-col md:flex-row items-center gap-3">
+        <div className="mb-8 flex flex-col items-stretch gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:mb-10 sm:flex-row sm:items-center sm:p-4">
           <div className="flex items-center gap-3 flex-1 w-full">
             <Search className="text-slate-400" size={20} />
             <input
@@ -162,7 +199,7 @@ export default function SearchPage() {
           <button
             type="button"
             onClick={handleSearch}
-            className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
+            className="min-h-11 w-full rounded-lg bg-emerald-600 px-5 py-2 text-white transition hover:bg-emerald-700 sm:w-auto"
           >
             Search
           </button>
@@ -187,18 +224,20 @@ export default function SearchPage() {
           <>
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4 text-slate-900">Services</h2>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {filteredServices.length > 0 ? (
                   filteredServices.map((service) => (
-                    <div
+                    <SearchResultLink
                       key={service._id}
-                      className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6"
+                      href={resultHref(service, "/services")}
+                      className="group block rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                     >
-                      <h3 className="text-lg font-semibold">{service.title}</h3>
+                      <h3 className="text-lg font-semibold group-hover:text-emerald-700">{service.title}</h3>
                       <p className="text-slate-600 mt-2 text-sm">
                         {service.description || service.shortDescription}
                       </p>
-                    </div>
+                      <ResultAction label={service.link ? "Visit service" : "View services"} />
+                    </SearchResultLink>
                   ))
                 ) : (
                   <p className="text-slate-500">No matching services found.</p>
@@ -208,25 +247,27 @@ export default function SearchPage() {
 
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4 text-slate-900">Projects</h2>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {filteredProjects.length > 0 ? (
                   filteredProjects.map((project) => (
-                    <div
+                    <SearchResultLink
                       key={project._id}
-                      className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
+                      href={resultHref(project, "/about#projects")}
+                      className="group block rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                     >
                       <Image
                         src={project.image || "/images/project1.webp"}
                         width={400}
                         height={250}
                         alt={project.title || "Project"}
-                        className="rounded-xl w-full h-[220px] object-cover"
+                        className="aspect-[16/10] h-auto w-full rounded-xl object-cover"
                       />
-                      <h3 className="mt-4 text-lg font-semibold">{project.title}</h3>
+                      <h3 className="mt-4 text-lg font-semibold group-hover:text-emerald-700">{project.title}</h3>
                       <p className="text-slate-600 mt-2 text-sm">
                         {project.description || project.shortDescription}
                       </p>
-                    </div>
+                      <ResultAction label={project.link ? "Visit project" : "View project"} />
+                    </SearchResultLink>
                   ))
                 ) : (
                   <p className="text-slate-500">No matching projects found.</p>
@@ -236,18 +277,20 @@ export default function SearchPage() {
 
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4 text-slate-900">Posts</h2>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {filteredPosts.length > 0 ? (
                   filteredPosts.map((post) => (
-                    <div
+                    <SearchResultLink
                       key={post._id}
-                      className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6"
+                      href={`/updates/${post.slug || post._id}`}
+                      className="group block rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                     >
-                      <h3 className="text-lg font-semibold">{post.title}</h3>
+                      <h3 className="text-lg font-semibold group-hover:text-emerald-700">{post.title}</h3>
                       <p className="text-slate-600 mt-2 text-sm">
                         {post.summary}
                       </p>
-                    </div>
+                      <ResultAction label="Read update" />
+                    </SearchResultLink>
                   ))
                 ) : (
                   <p className="text-slate-500">No matching posts found.</p>
@@ -259,14 +302,18 @@ export default function SearchPage() {
               <h2 className="text-2xl font-semibold mb-4 text-slate-900">About</h2>
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 {aboutMatches ? (
-                  <div>
+                  <SearchResultLink
+                    href="/about"
+                    className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  >
                     <p className="text-slate-600">
                       Your search matches content from the About page.
                     </p>
                     <p className="text-slate-500 mt-2">
                       Try searching company mission, team names, project titles, or values.
                     </p>
-                  </div>
+                    <ResultAction label="Open About page" />
+                  </SearchResultLink>
                 ) : (
                   <p className="text-slate-500">No matching About content found.</p>
                 )}

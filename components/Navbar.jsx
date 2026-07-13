@@ -28,7 +28,7 @@ export default function Navbar() {
           <Logo />
         </div>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-slate-200/80 bg-slate-50/90 px-2 py-2 font-semibold md:flex">
+        <nav className="hidden items-center gap-1 rounded-full border border-slate-200/80 bg-slate-50/90 px-2 py-2 font-semibold lg:flex">
           {navLinks.map((link, idx) => (
             <Link
               key={link.name}
@@ -43,7 +43,7 @@ export default function Navbar() {
         </nav>
 
         <button
-          className="rounded-full border border-slate-200 bg-white p-2 text-slate-700 transition hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 md:hidden"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-label="Toggle navigation menu"
@@ -53,13 +53,13 @@ export default function Navbar() {
       </div>
 
       {isOpen ? (
-        <div className="border-t border-slate-200 bg-white/95 md:hidden animate-slide-in-down">
-          <nav className="flex flex-col gap-2 px-6 py-5">
+        <div className="max-h-[calc(100dvh-4.75rem)] overflow-y-auto border-t border-slate-200 bg-white/95 lg:hidden animate-slide-in-down">
+          <nav className="flex flex-col gap-1 px-4 py-4 sm:px-6">
             {navLinks.map((link, idx) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="rounded-2xl px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-700 animate-slide-in-left"
+                className={`rounded-2xl px-4 py-3 text-base font-medium transition hover:bg-emerald-50 hover:text-emerald-700 animate-slide-in-left ${pathname === link.href ? "bg-slate-950 text-white" : "text-slate-700"}`}
                 style={{ animationDelay: `${idx * 0.05}s` }}
                 onClick={() => setIsOpen(false)}
               >

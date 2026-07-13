@@ -36,11 +36,11 @@ export default async function Footer() {
   const phoneHref = getTelHref(contact.phone);
 
   return (
-    <footer className="mt-16 overflow-hidden border-t border-slate-200 bg-slate-950 text-white">
+    <footer className="relative mt-12 overflow-hidden border-t border-slate-200 bg-slate-950 text-white sm:mt-16">
       <div className="absolute top-0 right-10 h-72 w-72 rounded-full bg-emerald-500/8 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-10 md:grid-cols-[1.15fr_0.75fr_0.95fr]">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.15fr_0.75fr_0.95fr]">
           <div className="animate-fade-in-left">
             <div className="mb-5 animate-fade-in-up">
               <Logo />
@@ -106,7 +106,7 @@ export default async function Footer() {
               {contact.email ? (
                 <div className="flex gap-3">
                   <FaEnvelope className="mt-1 shrink-0 text-emerald-300" />
-                  <a className="transition hover:text-white" href={`mailto:${contact.email}`}>
+                  <a className="min-w-0 break-all transition hover:text-white" href={`mailto:${contact.email}`}>
                     {contact.email}
                   </a>
                 </div>

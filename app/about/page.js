@@ -249,14 +249,14 @@ export default async function AboutPage() {
           <div className="absolute inset-0 bg-[linear-gradient(130deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.72)_50%,rgba(6,78,59,0.48)_100%)]" />
         </div>
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
           <div className="max-w-2xl">
             <span className="hero-fade-up inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 backdrop-blur">
               <Sparkles size={16} />
               About Nexus DevOps Limited
             </span>
 
-            <h1 className="hero-fade-up-delay-1 mt-6 text-5xl font-black leading-[.96] tracking-[-.055em] md:text-7xl">
+            <h1 className="hero-fade-up-delay-1 mt-6 text-4xl font-black leading-[.98] tracking-[-.045em] sm:text-5xl md:text-7xl">
               Local insight.<br/><span className="text-emerald-300">World-class digital craft.</span>
             </h1>
 
@@ -264,7 +264,7 @@ export default async function AboutPage() {
               {heroText}
             </p>
 
-            <div className="hero-fade-up-delay-3 mt-10 flex flex-wrap gap-4">
+            <div className="hero-fade-up-delay-3 mt-8 flex flex-col gap-3 min-[400px]:flex-row min-[400px]:flex-wrap sm:mt-10 sm:gap-4">
               <Link
                 href="/services"
                 className="inline-flex items-center gap-2 rounded-full bg-emerald-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-emerald-300"
@@ -335,7 +335,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-24 md:py-32">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 md:py-32">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             icon={Layers3}
@@ -364,7 +364,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-10">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <SectionTitle
           eyebrow="Story"
           title="Our story and operating rhythm"
@@ -438,7 +438,7 @@ export default async function AboutPage() {
       </section>
 
       {about.team.length > 0 ? (
-        <section className="bg-slate-50 px-6 py-20">
+        <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20">
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
@@ -462,7 +462,7 @@ export default async function AboutPage() {
         </section>
       ) : null}
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
         <SectionTitle
           eyebrow="Services"
           title="A sample of the services currently published"
@@ -482,7 +482,7 @@ export default async function AboutPage() {
         )}
       </section>
 
-      <section className="bg-white px-6 py-20">
+      <section id="projects" className="scroll-mt-24 bg-white px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-7xl">
           <SectionTitle
             eyebrow="Projects"
@@ -504,7 +504,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 px-6 py-20">
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-7xl">
           <SectionTitle
             eyebrow="Updates"
@@ -526,7 +526,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="px-6 py-20">
+      <section className="px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-slate-200 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 p-8 text-white shadow-[0_18px_50px_rgba(15,23,42,0.12)] md:p-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>

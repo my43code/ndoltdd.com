@@ -128,6 +128,7 @@ function FileField({ label, accept, onFileSelect, description, capture }) {
         <input
           type="file"
           accept={accept}
+          capture={capture}
           onChange={handleFileSelect}
           className="sr-only"
           aria-label={label}

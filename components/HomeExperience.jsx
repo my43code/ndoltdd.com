@@ -51,40 +51,40 @@ export default function HomeExperience({ services = [], projects = [] }) {
         <div className="hero-overlay" />
         <div className="hero-orb hero-orb-one" /><div className="hero-orb hero-orb-two" />
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(100svh-76px)] max-w-7xl items-end px-6 pb-16 pt-28 md:items-center md:px-8 md:py-24">
+        <div className="relative z-10 mx-auto flex min-h-[calc(100svh-76px)] max-w-7xl items-end px-4 pb-36 pt-20 sm:px-6 md:items-center md:px-8 md:py-24">
           <div className="max-w-4xl">
-            <p key={`badge-${active}`} className="hero-enter inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.25em] text-emerald-200 backdrop-blur-xl">
+            <p key={`badge-${active}`} className="hero-enter inline-flex max-w-full items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-200 backdrop-blur-xl sm:px-4 sm:text-xs sm:tracking-[0.25em]">
               <Sparkles size={15} /> {slides[active].badge}
             </p>
-            <h1 key={`title-${active}`} className="hero-enter hero-enter-delay mt-6 max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.055em] text-white sm:text-6xl lg:text-8xl">
+            <h1 key={`title-${active}`} className="hero-enter hero-enter-delay mt-5 max-w-4xl text-4xl font-black leading-[1] tracking-[-0.045em] text-white min-[390px]:text-5xl sm:mt-6 sm:text-6xl lg:text-8xl">
               {slides[active].title}
             </h1>
             <p key={`copy-${active}`} className="hero-enter hero-enter-delay-2 mt-6 max-w-2xl text-base leading-7 text-slate-200 md:text-xl md:leading-8">{slides[active].subtitle}</p>
-            <div className="hero-enter hero-enter-delay-2 mt-9 flex flex-wrap gap-3">
-              <Link href="/contact" className="home-button home-button-primary">Start a project <ArrowRight size={18} /></Link>
-              <Link href="/services" className="home-button home-button-ghost">Explore services</Link>
+            <div className="hero-enter hero-enter-delay-2 mt-8 flex flex-col gap-3 min-[390px]:flex-row min-[390px]:flex-wrap">
+              <Link href="/contact" className="home-button home-button-primary w-full min-[390px]:w-auto">Start a project <ArrowRight size={18} /></Link>
+              <Link href="/services" className="home-button home-button-ghost w-full min-[390px]:w-auto">Explore services</Link>
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 md:bottom-10 md:right-10">
+        <div className="absolute bottom-5 right-4 z-20 flex items-center gap-1.5 sm:right-6 md:bottom-10 md:right-10 md:gap-2">
           <button className="slider-control" onClick={() => move(-1)} aria-label="Previous slide"><ChevronLeft /></button>
           <button className="slider-control" onClick={() => setPlaying((value) => !value)} aria-label={playing ? "Pause slideshow" : "Play slideshow"}>{playing ? <Pause size={18} /> : <Play size={18} />}</button>
           <button className="slider-control" onClick={() => move(1)} aria-label="Next slide"><ChevronRight /></button>
         </div>
-        <div className="absolute bottom-7 left-6 z-20 flex gap-2 md:bottom-11 md:left-1/2 md:-translate-x-1/2">
+        <div className="absolute bottom-7 left-4 z-20 flex gap-1.5 sm:left-6 md:bottom-11 md:left-1/2 md:-translate-x-1/2 md:gap-2">
           {slides.map((slide, index) => <button key={slide.id} className={`slide-dot ${index === active ? "is-active" : ""}`} onClick={() => setActive(index)} aria-label={`Show slide ${index + 1}`} />)}
         </div>
       </section>
 
-      <section className="bg-[#f4f5ef] px-6 py-24 md:px-8 md:py-32">
+      <section className="bg-[#f4f5ef] px-4 py-16 sm:px-6 sm:py-24 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="reveal-up grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
             <p className="section-kicker">What we do / 01</p>
             <div><h2 className="display-heading">Useful technology.<br /><span>Beautifully delivered.</span></h2><p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">We turn complex ideas into clear, high-performing digital experiences your team and customers will actually enjoy using.</p></div>
           </div>
 
-          <div className="mt-12 flex items-center justify-between border-b border-slate-300 pb-5">
+          <div className="mt-10 flex flex-col items-start justify-between gap-4 border-b border-slate-300 pb-5 min-[420px]:flex-row min-[420px]:items-center sm:mt-12">
             <p className="text-sm font-semibold text-slate-500">Choose how you explore</p>
             <div className="view-switch" aria-label="Service view style">
               <button className={view === "grid" ? "is-active" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={17} /> Grid</button>
@@ -104,9 +104,9 @@ export default function HomeExperience({ services = [], projects = [] }) {
         </div>
       </section>
 
-      <section className="overflow-hidden bg-[#08120f] px-6 py-24 text-white md:px-8 md:py-32">
+      <section className="overflow-hidden bg-[#08120f] px-4 py-16 text-white sm:px-6 sm:py-24 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><p className="section-kicker text-emerald-300">Selected work / 02</p><h2 className="mt-6 max-w-3xl text-5xl font-black tracking-[-0.05em] md:text-7xl">Ideas made tangible.</h2></div><Link href="/contact" className="home-button home-button-outline">Build yours <ArrowRight size={18} /></Link></div>
+          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><p className="section-kicker text-emerald-300">Selected work / 02</p><h2 className="mt-6 max-w-3xl text-4xl font-black tracking-[-0.045em] sm:text-5xl md:text-7xl">Ideas made tangible.</h2></div><Link href="/contact" className="home-button home-button-outline self-start">Build yours <ArrowRight size={18} /></Link></div>
           <div className="horizontal-gallery mt-14">
             {work.slice(0, 6).map((project, index) => <article className="work-card" key={project.id}><div className="relative h-[360px] overflow-hidden md:h-[470px]"><Image src={project.image || fallbackSlides[index % 3].image} alt={project.title} fill sizes="(max-width: 768px) 86vw, 52vw" className="object-cover" /><div className="work-overlay" /></div><div className="flex items-start justify-between gap-5 p-6"><div><p className="text-xs uppercase tracking-[.24em] text-emerald-300">Project 0{index + 1}</p><h3 className="mt-3 text-2xl font-bold">{project.title}</h3><p className="mt-3 max-w-xl leading-7 text-slate-400">{project.description}</p></div><ArrowRight className="mt-2 shrink-0" /></div></article>)}
           </div>

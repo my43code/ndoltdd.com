@@ -1,14 +1,24 @@
-import { useRouter } from "next/navigation";
+"use client";
+
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-const router = useRouter();
+export default function SignOutButton() {
+  const router = useRouter();
 
-<button
-  onClick={async () => {
+  async function handleSignOut() {
     await signOut({ redirect: false });
-    router.push("/login");
-  }}
-  className="bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800"
->
-  Sign out
-</button>
+    router.replace("/login");
+    router.refresh();
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleSignOut}
+      className="min-h-11 rounded-lg bg-slate-900 px-4 py-2 text-white transition hover:bg-slate-800"
+    >
+      Sign out
+    </button>
+  );
+}

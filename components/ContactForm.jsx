@@ -53,7 +53,7 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[1.75rem] border border-slate-200 bg-white/95 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-8 card-hover animate-scale-in hover:border-emerald-300/50"
+      className="rounded-[1.5rem] border border-slate-200 bg-white/95 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur sm:rounded-[1.75rem] sm:p-6 md:p-8 card-hover animate-scale-in hover:border-emerald-300/50"
     >
       <div className="mb-6 animate-fade-in-up">
         <p className="text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700 animate-bounce-in">
@@ -132,7 +132,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-950/50 disabled:cursor-not-allowed disabled:opacity-70 hover:scale-105 btn-glow"
+          className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-950/50 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto hover:scale-105 btn-glow"
         >
           {loading ? "Sending..." : "Send Message"}
           <SendHorizonal size={16} className={loading ? "animate-slow-rotate" : ""} />

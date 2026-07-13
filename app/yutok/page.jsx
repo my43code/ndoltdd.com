@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Send, Bot, User } from "lucide-react";
+import { Send, Bot, User, Sparkles } from "lucide-react";
+
+const suggestions = [
+  "What services does Nexus DevOps offer?",
+  "Define digital transformation",
+  "What is cloud computing?",
+];
 
 export default function YuTokPage() {
   const [input, setInput] = useState("");
@@ -11,16 +17,20 @@ export default function YuTokPage() {
     {
       role: "assistant",
       content:
-        "Hello, I am YuTok. Ask me about Nexus DevOps Limited, services, projects, or general technology questions.",
+        "Hello, I am YuTok. I can answer questions, explain ideas, define words and phrases, and help you learn about Nexus DevOps Limited.",
     },
   ]);
+  const messagesEndRef = useRef(null);
 
-  async function handleSend(e) {
-    e.preventDefault();
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
-    if (!input.trim()) return;
+  async function sendMessage(rawMessage) {
+    const text = rawMessage.trim();
+    if (!text || loading) return;
 
-    const userMessage = { role: "user", content: input };
+    const userMessage = { role: "user", content: text };
     const updatedMessages = [...messages, userMessage];
 
     setMessages(updatedMessages);
@@ -33,10 +43,14 @@ export default function YuTokPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          message: text,
+          messages: updatedMessages.slice(-10),
+        }),
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.reply || "YuTok request failed");
 
       setMessages([
         ...updatedMessages,
@@ -59,14 +73,19 @@ export default function YuTokPage() {
     }
   }
 
+  async function handleSend(e) {
+    e.preventDefault();
+    await sendMessage(input);
+  }
+
   return (
     <section className="min-h-screen bg-slate-950 text-white">
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6 sm:py-8">
+        <div className="mb-5 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">YuTok AI Assistant</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">YuTok AI Assistant</h1>
             <p className="text-slate-400 mt-2">
-              A smart assistant experience for Nexus DevOps Limited.
+              Ask questions, request explanations, or define any word or phrase.
             </p>
           </div>
 
@@ -78,8 +97,8 @@ export default function YuTokPage() {
           </Link>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl h-[70vh] flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex h-[calc(100dvh-14rem)] min-h-[28rem] max-h-[52rem] flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 sm:h-[70vh]">
+          <div className="flex-1 space-y-4 overflow-y-auto p-3 sm:p-6" aria-live="polite">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -88,7 +107,7 @@ export default function YuTokPage() {
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 flex gap-3 ${
+                  className={`flex max-w-[92%] gap-2 rounded-2xl px-3 py-3 sm:max-w-[80%] sm:gap-3 sm:px-4 ${
                     message.role === "user"
                       ? "bg-emerald-600 text-white"
                       : "bg-slate-800 text-slate-100"
@@ -101,10 +120,26 @@ export default function YuTokPage() {
                       <Bot size={18} />
                     )}
                   </div>
-                  <p className="text-sm leading-6">{message.content}</p>
+                  <p className="whitespace-pre-wrap text-sm leading-6">{message.content}</p>
                 </div>
               </div>
             ))}
+
+            {messages.length === 1 && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {suggestions.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    onClick={() => sendMessage(suggestion)}
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-3 py-2 text-left text-xs text-slate-300 transition hover:border-emerald-500 hover:text-white"
+                  >
+                    <Sparkles size={14} aria-hidden="true" />
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {loading && (
               <div className="flex justify-start">
@@ -113,25 +148,34 @@ export default function YuTokPage() {
                 </div>
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
 
           <form
             onSubmit={handleSend}
-            className="border-t border-slate-800 p-4 flex gap-3"
+            className="flex gap-2 border-t border-slate-800 p-3 sm:gap-3 sm:p-4"
           >
-            <input
-              type="text"
-              placeholder="Ask YuTok something..."
+            <textarea
+              rows={1}
+              maxLength={1000}
+              placeholder="Ask a question or type “define…”"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 bg-slate-800 text-white rounded-xl px-4 py-3 outline-none border border-slate-700"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  e.currentTarget.form?.requestSubmit();
+                }
+              }}
+              className="max-h-32 min-w-0 flex-1 resize-none rounded-xl border border-slate-700 bg-slate-800 px-3 py-3 text-base text-white outline-none focus:border-emerald-500 sm:px-4"
             />
             <button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 transition rounded-xl px-5 py-3 flex items-center gap-2 font-medium"
+              disabled={loading || !input.trim()}
+              className="flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 font-medium transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:px-5"
             >
               <Send size={18} />
-              Send
+              <span className="hidden min-[380px]:inline">Send</span>
             </button>
           </form>
         </div>

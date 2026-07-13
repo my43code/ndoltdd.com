@@ -62,12 +62,12 @@ export default async function ContactPage() {
           <div className="absolute inset-0 bg-[linear-gradient(130deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.72)_50%,rgba(6,78,59,0.48)_100%)]" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:py-28">
           <div className="max-w-2xl">
             <span className="hero-fade-up inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 backdrop-blur">
               Contact
             </span>
-            <h1 className="hero-fade-up-delay-1 mt-6 text-5xl font-black tracking-tight md:text-7xl">
+            <h1 className="hero-fade-up-delay-1 mt-6 text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
               Let us talk about your next build.
             </h1>
             <p className="hero-fade-up-delay-2 mt-6 max-w-2xl text-base leading-8 text-slate-200 md:text-lg">
@@ -78,7 +78,7 @@ export default async function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:px-8">
         <SectionTitle
           eyebrow="Get in touch"
           title="Live contact details and response form"
