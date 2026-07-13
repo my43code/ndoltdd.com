@@ -7,6 +7,12 @@ import SlidingShow from "@/components/SlidingShow";
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 
+const fallbackPosts = [
+  { _id: "building-better-digital-foundations", href: "/contact", title: "Building better digital foundations", summary: "Why thoughtful structure, strong performance, and clear user journeys matter for growing organisations.", content: "Digital foundations help teams move confidently.", image: "/images/project1.webp", createdAt: new Date("2026-06-18") },
+  { _id: "technology-around-people", href: "/contact", title: "Designing technology around people", summary: "A practical look at making complex systems feel simple, useful, and welcoming for real users.", content: "People-first design creates better outcomes.", image: "/images/team.webp", createdAt: new Date("2026-05-24") },
+  { _id: "launch-with-confidence", href: "/contact", title: "From idea to launch with confidence", summary: "The decisions that turn an early concept into a reliable product ready for customers and teams.", content: "Confident launches begin with a clear process.", image: "/images/contact.jpg", createdAt: new Date("2026-04-12") },
+];
+
 async function getPosts() {
   try {
     await connectMongoDB();
@@ -31,7 +37,7 @@ function FeedCard({ post, label }) {
 
   return (
     <Link
-      href={`/updates/${post.slug || post._id}`}
+      href={post.href || `/updates/${post.slug || post._id}`}
       className="group block min-w-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_20px_50px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:border-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       aria-label={`Read latest feed item: ${post.title}`}
     >
@@ -70,7 +76,8 @@ function FeedCard({ post, label }) {
 
 export default async function UpdatesPage() {
   const data = await getPosts();
-  const posts = data?.posts || [];
+  const livePosts = data?.posts || [];
+  const posts = livePosts.length ? livePosts : fallbackPosts;
   const featuredPost = posts[0] || null;
   const feedPosts = posts.slice(1);
 
@@ -78,7 +85,7 @@ export default async function UpdatesPage() {
     Math.max(1, Math.ceil(((post?.content || post?.summary || "").length || 240) / 900));
 
   return (
-    <main className="bg-slate-50">
+    <main className="bg-[#f4f5ef]">
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-20 lg:px-6">
         <section className="mb-10 overflow-hidden rounded-[2.25rem] border border-slate-200/80 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-6 text-white shadow-[0_30px_70px_-35px_rgba(15,23,42,0.5)] md:p-8 lg:p-10">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -86,7 +93,7 @@ export default async function UpdatesPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-emerald-300">
                 Updates & stories
               </p>
-              <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
+              <h1 className="mt-4 text-4xl font-black leading-[1.02] tracking-[-.045em] text-white sm:text-6xl">
                 Fresh stories, polished presentation, and a clearer view of what we are building.
               </h1>
               <p className="mt-5 text-base leading-8 text-slate-300">
@@ -155,7 +162,7 @@ export default async function UpdatesPage() {
                     </div>
 
                     <Link
-                      href={`/updates/${featuredPost.slug || featuredPost._id}`}
+                      href={featuredPost.href || `/updates/${featuredPost.slug || featuredPost._id}`}
                       className="inline-flex items-center gap-2 rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300"
                     >
                       Read post

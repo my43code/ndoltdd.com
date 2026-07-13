@@ -8,6 +8,12 @@ import Service from "@/models/Service";
 
 export const dynamic = "force-dynamic";
 
+const fallbackServices = [
+  { _id: "web-development", title: "Web & App Development", shortDescription: "Fast, accessible websites and applications built around your customers and business goals.", image: "/images/project1.webp", link: "/contact" },
+  { _id: "business-systems", title: "Business Systems", shortDescription: "Practical database-driven platforms that simplify work, reporting, and collaboration.", image: "/images/team.webp", link: "/contact" },
+  { _id: "digital-support", title: "IT Support & Care", shortDescription: "Reliable technical support, maintenance, security reviews, and continuous improvement.", image: "/images/contact.jpg", link: "/contact" },
+];
+
 async function getServices() {
   try {
     await connectMongoDB();
@@ -43,13 +49,14 @@ function MetricCard({ icon: Icon, label, value, detail }) {
 }
 
 export default async function ServicesPage() {
-  const services = await getServices();
+  const liveServices = await getServices();
+  const services = liveServices.length ? liveServices : fallbackServices;
   const featuredService = services[0];
   const videoCount = services.filter((service) => service.video).length;
   const imageCount = services.filter((service) => service.image && !service.video).length;
 
   return (
-    <main className="bg-slate-50">
+    <main className="bg-[#f4f5ef]">
       <section className="relative overflow-hidden bg-slate-950 text-white">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_22%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.12),transparent_18%),radial-gradient(circle_at_50%_80%,rgba(250,204,21,0.08),transparent_20%)]" />
@@ -63,7 +70,7 @@ export default async function ServicesPage() {
               Services
             </span>
 
-            <h1 className="hero-fade-up-delay-1 mt-6 text-5xl font-black tracking-tight md:text-7xl">
+            <h1 className="hero-fade-up-delay-1 mt-6 text-5xl font-black leading-[.96] tracking-[-.055em] md:text-7xl">
               Premium digital services built to ship with confidence.
             </h1>
 

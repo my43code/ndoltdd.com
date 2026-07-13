@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 
 const navLinks = [
@@ -16,6 +17,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl shadow-[0_10px_35px_rgba(2,6,23,0.06)] animate-fade-in-down">
@@ -31,11 +33,11 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="group relative rounded-full px-4 py-2 text-sm text-slate-600 transition duration-300 hover:bg-white hover:text-slate-950 animate-fade-in-down"
+              className={`group relative rounded-full px-4 py-2 text-sm transition duration-300 hover:bg-white hover:text-slate-950 animate-fade-in-down ${pathname === link.href ? "bg-slate-950 text-white shadow-lg" : "text-slate-600"}`}
               style={{ animationDelay: `${idx * 0.05}s` }}
             >
               {link.name}
-              <span className="absolute inset-x-3 bottom-2 h-[2px] w-[calc(100%-1.5rem)] scale-x-0 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-transform duration-300 group-hover:scale-x-100"></span>
+              <span className={`absolute inset-x-3 bottom-2 h-[2px] w-[calc(100%-1.5rem)] rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-transform duration-300 group-hover:scale-x-100 ${pathname === link.href ? "scale-x-100" : "scale-x-0"}`}></span>
             </Link>
           ))}
         </nav>

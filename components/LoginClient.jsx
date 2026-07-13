@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getProviders, signIn, useSession } from "next-auth/react";
@@ -38,7 +39,6 @@ export default function LoginClient({ initialErrorCode = "" }) {
   const [providers, setProviders] = useState(null);
   const [loadingProvider, setLoadingProvider] = useState("");
   const [error, setError] = useState("");
-  const [hydrated, setHydrated] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -50,10 +50,6 @@ export default function LoginClient({ initialErrorCode = "" }) {
       router.replace("/admin");
     }
   }, [router, session, status]);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -114,7 +110,7 @@ export default function LoginClient({ initialErrorCode = "" }) {
     router.push(`/login/verify?token=${encodeURIComponent(sessionToken)}`);
   }
 
-  if (!hydrated || status === "loading") {
+  if (status === "loading") {
     return (
       <section className="min-h-[70vh] flex items-center justify-center bg-slate-950 px-6 text-white">
         <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur">
@@ -137,11 +133,12 @@ export default function LoginClient({ initialErrorCode = "" }) {
 
   return (
     <section className="relative overflow-hidden bg-slate-950 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.25),_transparent_30%),radial-gradient(circle_at_bottom_left,_rgba(250,204,21,0.14),_transparent_26%),linear-gradient(135deg,_rgba(2,6,23,0.98),_rgba(15,23,42,0.92))]" />
+      <div className="absolute inset-0"><Image src="/images/team.webp" alt="" fill priority sizes="100vw" className="object-cover opacity-20" /></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.3),_transparent_30%),radial-gradient(circle_at_bottom_left,_rgba(250,204,21,0.14),_transparent_26%),linear-gradient(135deg,_rgba(2,6,23,0.99),_rgba(15,23,42,0.86))]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:48px_48px] opacity-15" />
 
       <div className="relative mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-6xl gap-8 px-4 py-8 sm:px-6 sm:py-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-10 lg:py-20">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl hero-fade-up">
           <span className="inline-flex items-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200">
             Admin access
           </span>
@@ -180,7 +177,7 @@ export default function LoginClient({ initialErrorCode = "" }) {
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">
+        <div className="login-panel hero-fade-up-delay-2 rounded-[2rem] border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">
           <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 sm:p-6">
             <h2 className="text-2xl font-semibold text-white">
               Choose a sign-in method

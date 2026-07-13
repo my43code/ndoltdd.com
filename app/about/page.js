@@ -12,6 +12,16 @@ import Service from "@/models/Service";
 
 export const dynamic = "force-dynamic";
 
+const aboutFallbackServices = [
+  { _id: "about-web", title: "Web & App Development", shortDescription: "Digital experiences designed to be fast, clear, and useful.", image: "/images/project1.webp", link: "/services" },
+  { _id: "about-systems", title: "Business Systems", shortDescription: "Connected tools that make everyday work easier to manage.", image: "/images/team.webp", link: "/services" },
+  { _id: "about-support", title: "Technical Support", shortDescription: "Dependable help and continuous care beyond the launch.", image: "/images/contact.jpg", link: "/services" },
+];
+const aboutFallbackProjects = [
+  { _id: "about-project-1", title: "Digital platforms", shortDescription: "Responsive experiences for growing organisations.", image: "/images/project1.webp" },
+  { _id: "about-project-2", title: "People-first systems", shortDescription: "Tools created around the teams who use them.", image: "/images/team.webp" },
+];
+
 async function getServices() {
   try {
     await connectMongoDB();
@@ -218,9 +228,9 @@ export default async function AboutPage() {
 
   const projectShowcase = (about.projects && about.projects.length > 0
     ? about.projects
-    : projects
+    : projects.length ? projects : aboutFallbackProjects
   ).slice(0, 6);
-  const serviceShowcase = services.slice(0, 3);
+  const serviceShowcase = (services.length ? services : aboutFallbackServices).slice(0, 3);
   const postShowcase = posts.slice(0, 3);
   const heroMedia = about.history?.video || about.history?.image || about.mvv?.video || about.mvv?.image || serviceShowcase[0]?.video || serviceShowcase[0]?.image || "/images/project1.webp";
   const heroIsVideo = Boolean(about.history?.video || about.mvv?.video || serviceShowcase[0]?.video);
@@ -232,7 +242,7 @@ export default async function AboutPage() {
   const contact = about.contact || {};
 
   return (
-    <main className="bg-slate-50">
+    <main className="bg-[#f4f5ef]">
       <section className="relative overflow-hidden bg-slate-950 text-white">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_22%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.12),transparent_18%),radial-gradient(circle_at_50%_80%,rgba(250,204,21,0.1),transparent_20%)]" />
@@ -246,8 +256,8 @@ export default async function AboutPage() {
               About Nexus DevOps Limited
             </span>
 
-            <h1 className="hero-fade-up-delay-1 mt-6 text-5xl font-black tracking-tight md:text-7xl">
-              We build digital systems that look premium and perform cleanly.
+            <h1 className="hero-fade-up-delay-1 mt-6 text-5xl font-black leading-[.96] tracking-[-.055em] md:text-7xl">
+              Local insight.<br/><span className="text-emerald-300">World-class digital craft.</span>
             </h1>
 
             <p className="hero-fade-up-delay-2 mt-6 max-w-2xl text-base leading-8 text-slate-200 md:text-lg">
@@ -325,7 +335,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-6 py-24 md:py-32">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             icon={Layers3}
