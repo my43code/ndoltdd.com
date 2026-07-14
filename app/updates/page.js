@@ -221,7 +221,7 @@ export default async function UpdatesPage() {
               eyebrow="Curated Gems"
               title="Deep Dives & Insights"
               subtitle="Explore thoughtful analysis, trend reports, and the ideas shaping our work. Every story is selected to help you discover something meaningful."
-              align="right"
+              align="left"
             />
           </div>
         </div>
