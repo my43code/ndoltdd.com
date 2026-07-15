@@ -36,7 +36,7 @@ export default async function Footer() {
   const phoneHref = getTelHref(contact.phone);
 
   return (
-    <footer className="relative mt-12 overflow-hidden border-t border-slate-200 bg-slate-950 text-white sm:mt-16">
+    <footer className="brand-footer relative mt-12 overflow-hidden border-t border-sky-400/20 text-white sm:mt-16">
       <div className="absolute top-0 right-10 h-72 w-72 rounded-full bg-emerald-500/8 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">

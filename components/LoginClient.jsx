@@ -112,7 +112,7 @@ export default function LoginClient({ initialErrorCode = "" }) {
 
   if (status === "loading") {
     return (
-      <section className="min-h-[70vh] flex items-center justify-center bg-slate-950 px-6 text-white">
+      <section className="brand-dark-surface min-h-[70vh] flex items-center justify-center px-6 text-white">
         <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur">
           Checking your session...
         </div>
@@ -122,7 +122,7 @@ export default function LoginClient({ initialErrorCode = "" }) {
 
   if (status === "authenticated" && session?.user) {
     return (
-      <section className="min-h-[70vh] flex items-center justify-center bg-slate-950 px-6 text-white">
+      <section className="brand-dark-surface min-h-[70vh] flex items-center justify-center px-6 text-white">
         <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-8 text-center backdrop-blur">
           <h2 className="text-2xl font-semibold">You are already signed in</h2>
           <p className="mt-3 text-sm text-slate-300">Redirecting you to the admin dashboard.</p>
@@ -132,7 +132,7 @@ export default function LoginClient({ initialErrorCode = "" }) {
   }
 
   return (
-    <section className="relative overflow-hidden bg-slate-950 text-white">
+    <section className="brand-dark-surface relative overflow-hidden text-white">
       <div className="absolute inset-0"><Image src="/images/team.webp" alt="" fill priority sizes="100vw" className="object-cover opacity-20" /></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.3),_transparent_30%),radial-gradient(circle_at_bottom_left,_rgba(250,204,21,0.14),_transparent_26%),linear-gradient(135deg,_rgba(2,6,23,0.99),_rgba(15,23,42,0.86))]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:48px_48px] opacity-15" />

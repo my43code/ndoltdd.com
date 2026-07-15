@@ -1,23 +1,59 @@
 import Image from "next/image";
 import Link from "next/link";
+import LiveRelativeTime from "@/components/LiveRelativeTime";
 
-export default function PostCard({ post }) {
-  const postedAt = post?.createdAt
-    ? new Date(post.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "Recently";
-
+export default function PostCard({ post, variant = "grid" }) {
   const readingTime = Math.max(
     1,
     Math.ceil(((post?.content || post?.summary || "").length || 240) / 900)
   );
+  const href = post.href || `/updates/${post.slug || post._id}`;
+
+  if (variant === "list") {
+    return (
+      <Link
+        href={href}
+        className="group block rounded-[1.5rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+        aria-label={`Read full story: ${post.title}`}
+      >
+        <article className="flex min-w-0 gap-4 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-3 shadow-[0_14px_35px_-24px_rgba(15,23,42,0.45)] transition duration-300 group-hover:-translate-y-0.5 group-hover:border-emerald-300 group-hover:shadow-[0_20px_45px_-24px_rgba(5,150,105,0.35)] sm:gap-5 sm:p-4">
+          <div className="relative h-28 w-24 shrink-0 overflow-hidden rounded-[1.1rem] bg-slate-900 sm:h-32 sm:w-32">
+            <Image
+              src={post.image || "/images/project1.webp"}
+              alt={post.title}
+              fill
+              sizes="(max-width: 640px) 96px, 128px"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect fill='%231e293b' width='128' height='128'/%3E%3C/svg%3E"
+            />
+          </div>
+
+          <div className="flex min-w-0 flex-1 flex-col py-1">
+            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700 sm:text-[11px]">
+              <LiveRelativeTime value={post.createdAt} />
+              <span className="h-1 w-1 rounded-full bg-slate-300" aria-hidden="true" />
+              <span>{readingTime} min read</span>
+            </div>
+            <h3 className="mt-2 line-clamp-2 text-base font-bold leading-snug tracking-tight text-slate-950 transition-colors group-hover:text-emerald-700 sm:text-lg">
+              {post.title}
+            </h3>
+            <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">
+              {post.summary || "A fresh update from our team."}
+            </p>
+            <span className="mt-auto inline-flex items-center gap-2 pt-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-emerald-700">
+              Read story
+              <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+            </span>
+          </div>
+        </article>
+      </Link>
+    );
+  }
 
   return (
     <Link
-      href={`/updates/${post.slug || post._id}`}
+      href={href}
       className="group block h-full cursor-pointer"
       aria-label={`Read full story: ${post.title}`}
     >
@@ -42,7 +78,7 @@ export default function PostCard({ post }) {
             </span>
 
             <div className="text-right text-[11px] font-semibold uppercase tracking-[0.3em] text-white/80 animate-slide-in-right">
-              <p>{postedAt}</p>
+              <p><LiveRelativeTime value={post.createdAt} /></p>
               <p>{readingTime} min read</p>
             </div>
           </div>

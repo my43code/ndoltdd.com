@@ -30,6 +30,25 @@ const emptyPost = {
   image: "/images/project1.webp",
 };
 
+const emptyBlogSection = () => ({
+  heading: "",
+  text: "",
+  image: "",
+  caption: "",
+  highlight: "",
+});
+
+const createEmptyBlog = () => ({
+  title: "",
+  excerpt: "",
+  category: "Current event",
+  author: "NDOLTD Stories",
+  location: "",
+  eventDate: "",
+  newsStatus: "Standard",
+  sections: [emptyBlogSection()],
+});
+
 const emptyAbout = {
   history: { text: "", image: "", video: "" },
   mission: "",
@@ -77,7 +96,7 @@ function FormField({ label, value, onChange, type = "text", textarea = false }) 
   );
 }
 
-function FileField({ label, accept, onFileSelect, description, capture }) {
+function FileField({ label, accept, onFileSelect, description, capture, maxSizeInMB }) {
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState(0);
   const [sizeWarning, setSizeWarning] = useState("");
@@ -85,7 +104,7 @@ function FileField({ label, accept, onFileSelect, description, capture }) {
   const isVideo = accept && accept.includes("video");
   const maxVideoSizeInMB = 10;
   const maxImageSizeInMB = 5;
-  const maxSize = isVideo ? maxVideoSizeInMB : maxImageSizeInMB;
+  const maxSize = maxSizeInMB || (isVideo ? maxVideoSizeInMB : maxImageSizeInMB);
 
   const handleFileSelect = async (e) => {
     const file = e.target.files?.[0];
@@ -163,11 +182,20 @@ function readFileAsDataUrl(file) {
   });
 }
 
+function toDateTimeLocal(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+  return localDate.toISOString().slice(0, 16);
+}
+
 async function fetchDashboardData() {
-  const [servicesRes, projectsRes, postsRes, aboutRes, messagesRes] = await Promise.all([
+  const [servicesRes, projectsRes, postsRes, blogsRes, aboutRes, messagesRes] = await Promise.all([
     fetch("/api/services", { cache: "no-store", credentials: "include" }),
     fetch("/api/projects", { cache: "no-store", credentials: "include" }),
     fetch("/api/posts", { cache: "no-store", credentials: "include" }),
+    fetch("/api/blogs", { cache: "no-store", credentials: "include" }),
     fetch("/api/about", { cache: "no-store", credentials: "include" }),
     fetch("/api/contact", { cache: "no-store", credentials: "include" }),
   ]);
@@ -175,6 +203,7 @@ async function fetchDashboardData() {
   const services = servicesRes.ok ? await servicesRes.json() : [];
   const projects = projectsRes.ok ? await projectsRes.json() : [];
   const postsData = postsRes.ok ? await postsRes.json() : { posts: [] };
+  const blogsData = blogsRes.ok ? await blogsRes.json() : { blogs: [] };
   const about = aboutRes.ok ? await aboutRes.json() : emptyAbout;
   const messagesData = messagesRes.ok ? await messagesRes.json() : { messages: [] };
 
@@ -182,6 +211,7 @@ async function fetchDashboardData() {
     services,
     projects,
     posts: postsData.posts || [],
+    blogs: blogsData.blogs || [],
     messages: messagesData.messages || [],
     about,
   };
@@ -196,22 +226,26 @@ export default function AdminPage() {
   const [services, setServices] = useState([]);
   const [projects, setProjects] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [messages, setMessages] = useState([]);
   const [about, setAbout] = useState(emptyAbout);
 
   const [serviceForm, setServiceForm] = useState(emptyService);
   const [projectForm, setProjectForm] = useState(emptyProject);
   const [postForm, setPostForm] = useState(emptyPost);
+  const [blogForm, setBlogForm] = useState(createEmptyBlog);
   const [teamMemberForm, setTeamMemberForm] = useState(emptyTeamMember);
   const [editingTeamMemberIndex, setEditingTeamMemberIndex] = useState(null);
   const [editingServiceId, setEditingServiceId] = useState(null);
   const [editingProjectId, setEditingProjectId] = useState(null);
   const [editingPostId, setEditingPostId] = useState(null);
+  const [editingBlogId, setEditingBlogId] = useState(null);
 
-  function applyDashboardData({ services, projects, posts, messages, about }) {
+  function applyDashboardData({ services, projects, posts, blogs, messages, about }) {
     setServices(services);
     setProjects(projects);
     setPosts(posts);
+    setBlogs(blogs);
     setMessages(messages);
     setAbout(about);
   }
@@ -541,6 +575,126 @@ export default function AdminPage() {
     }
   }
 
+  function updateBlogSection(index, field, value) {
+    setBlogForm((current) => ({
+      ...current,
+      sections: current.sections.map((section, sectionIndex) =>
+        sectionIndex === index ? { ...section, [field]: value } : section
+      ),
+    }));
+  }
+
+  function addBlogSection() {
+    setBlogForm((current) => {
+      return { ...current, sections: [...current.sections, emptyBlogSection()] };
+    });
+  }
+
+  function removeBlogSection(index) {
+    setBlogForm((current) => {
+      if (current.sections.length <= 1) return current;
+      return { ...current, sections: current.sections.filter((_, sectionIndex) => sectionIndex !== index) };
+    });
+  }
+
+  async function saveBlog(e) {
+    e.preventDefault();
+    const invalidSectionIndex = blogForm.sections.findIndex(
+      (section) => !section.heading.trim() || !section.text.trim() || !section.image.trim()
+    );
+
+    if (!blogForm.title.trim() || !blogForm.excerpt.trim()) {
+      setStatus("Add the story title and introduction before publishing.");
+      return;
+    }
+
+    if (blogForm.sections.length < 1) {
+      setStatus("Add at least one image and story section before publishing.");
+      return;
+    }
+
+    if (invalidSectionIndex >= 0) {
+      setStatus(`Section ${invalidSectionIndex + 1} needs a heading, story text, and image.`);
+      return;
+    }
+
+    const requestBody = JSON.stringify(blogForm);
+    if (new Blob([requestBody]).size > 14 * 1024 * 1024) {
+      setStatus("This story is too large to publish. Use smaller images or image URLs and try again.");
+      return;
+    }
+
+    setStatus(editingBlogId ? "Updating Blog story..." : "Publishing Blog story...");
+
+    try {
+      const endpoint = editingBlogId ? `/api/blogs/${editingBlogId}` : "/api/blogs";
+      const res = await fetch(endpoint, {
+        method: editingBlogId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: requestBody,
+        credentials: "include",
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        setStatus(editingBlogId ? "Blog story updated." : "Blog story published.");
+        setEditingBlogId(null);
+        setBlogForm(createEmptyBlog());
+        await loadData();
+      } else if (res.status === 401) {
+        setStatus("Your admin session has expired. Sign in again before publishing.");
+      } else if (res.status === 413) {
+        setStatus("The uploaded images are too large. Use smaller images or image URLs and try again.");
+      } else {
+        setStatus(data.message || data.error || `Failed to publish Blog story (${res.status}).`);
+      }
+    } catch (error) {
+      console.error("Failed to save Blog story:", error);
+      setStatus("Could not publish the Blog story. Check your connection and try again.");
+    }
+  }
+
+  function editBlog(item) {
+    const sections = (item.sections || []).map((section) => ({
+      heading: section.heading || "",
+      text: section.text || "",
+      image: section.image || "",
+      caption: section.caption || "",
+      highlight: section.highlight || "",
+    }));
+
+    setEditingBlogId(item._id);
+    setBlogForm({
+      title: item.title || "",
+      excerpt: item.excerpt || "",
+      category: item.category || "Current event",
+      author: item.author || "NDOLTD Stories",
+      location: item.location || "",
+      eventDate: toDateTimeLocal(item.eventDate),
+      newsStatus: item.newsStatus || "Standard",
+      sections: sections.length ? sections : [emptyBlogSection()],
+    });
+    setTab("blogs");
+    setStatus("");
+  }
+
+  function cancelBlogEdit() {
+    setEditingBlogId(null);
+    setBlogForm(createEmptyBlog());
+  }
+
+  async function deleteBlog(id) {
+    const res = await fetch(`/api/blogs/${id}`, { method: "DELETE", credentials: "include" });
+    const data = await res.json();
+    if (res.ok) {
+      setStatus("Blog story deleted.");
+      if (editingBlogId === id) cancelBlogEdit();
+      await loadData();
+    } else {
+      setStatus(data.message || "Failed to delete blog story.");
+    }
+  }
+
   async function saveAboutContent(nextAbout, successMessage = "About page updated.") {
     const payload = {
       ...nextAbout,
@@ -649,6 +803,7 @@ export default function AdminPage() {
     { id: "services", label: "Services" },
     { id: "projects", label: "Projects" },
     { id: "posts", label: "Posts" },
+    { id: "blogs", label: "Blog" },
     { id: "messages", label: "Messages" },
     { id: "about", label: "About" },
   ];
@@ -659,7 +814,7 @@ export default function AdminPage() {
         <div className="min-w-0">
           <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">Admin Dashboard</h1>
           <p className="mt-1 text-sm text-slate-600 sm:text-base">
-            Manage services, projects, posts, and about content.
+            Manage services, projects, updates, blog stories, and about content.
           </p>
           {session?.user?.email ? (
             <p className="mt-2 text-sm text-slate-500">
@@ -701,7 +856,7 @@ export default function AdminPage() {
         <LoadingState
           eyebrow="Admin dashboard"
           title="Loading your dashboard"
-          subtitle="We are fetching live services, projects, posts, and about content."
+          subtitle="We are fetching live services, projects, updates, blog stories, and about content."
         />
       ) : (
         <>
@@ -1029,6 +1184,117 @@ export default function AdminPage() {
                   ))
                 )}
               </div>
+            </div>
+          )}
+
+          {tab === "blogs" && (
+            <div className="grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
+              <form onSubmit={saveBlog} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                <div className="flex flex-col gap-3 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[.25em] text-red-700">Current affairs story editor</p>
+                    <h2 className="mt-2 text-2xl font-bold text-slate-950">{editingBlogId ? "Edit Blog Story" : "Create Blog Story"}</h2>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Publish with one section or add as many sections as your story needs. Every section keeps its own image, heading, and story text.</p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700">{blogForm.sections.length} {blogForm.sections.length === 1 ? "section" : "sections"}</span>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <FormField label="Story title" value={blogForm.title} onChange={(value) => setBlogForm({ ...blogForm, title: value })} />
+                  <FormField label="Author" value={blogForm.author} onChange={(value) => setBlogForm({ ...blogForm, author: value })} />
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-slate-700">Story type</label>
+                    <select value={blogForm.category} onChange={(event) => setBlogForm({ ...blogForm, category: event.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm text-slate-900 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base">
+                      <option>Current event</option>
+                      <option>Community happening</option>
+                      <option>Personal story</option>
+                      <option>Life event</option>
+                      <option>Fiction</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-slate-700">Coverage status</label>
+                    <select value={blogForm.newsStatus} onChange={(event) => setBlogForm({ ...blogForm, newsStatus: event.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm text-slate-900 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base">
+                      <option>Standard</option>
+                      <option>Developing</option>
+                      <option>Breaking</option>
+                    </select>
+                  </div>
+                  <FormField label="Event location (optional)" value={blogForm.location} onChange={(value) => setBlogForm({ ...blogForm, location: value })} />
+                  <FormField label="Event date and time (optional)" type="datetime-local" value={blogForm.eventDate} onChange={(value) => setBlogForm({ ...blogForm, eventDate: value })} />
+                  <div className="md:col-span-2">
+                    <FormField label="Lead summary / introduction" value={blogForm.excerpt} onChange={(value) => setBlogForm({ ...blogForm, excerpt: value })} textarea />
+                  </div>
+                </div>
+
+                <div className="space-y-5">
+                  {blogForm.sections.map((section, index) => (
+                    <fieldset key={index} className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 sm:p-5">
+                      <div className="mb-5 flex items-center justify-between gap-4">
+                        <div>
+                          <legend className="text-lg font-bold text-slate-950">Section {index + 1}</legend>
+                          <p className="text-xs font-semibold uppercase tracking-[.2em] text-slate-500">{index === 0 ? "Lead report" : index === blogForm.sections.length - 1 ? "Final details / context" : "Supporting update"}</p>
+                        </div>
+                        {blogForm.sections.length > 1 ? (
+                          <button type="button" onClick={() => removeBlogSection(index)} className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600">Remove</button>
+                        ) : null}
+                      </div>
+
+                      <div className="grid gap-4">
+                        <FormField label="Section heading" value={section.heading} onChange={(value) => updateBlogSection(index, "heading", value)} />
+                        <FormField label="Story text" value={section.text} onChange={(value) => updateBlogSection(index, "text", value)} textarea />
+                        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+                          <FormField label="Informative text (shown in blue highlight)" value={section.highlight} onChange={(value) => updateBlogSection(index, "highlight", value)} textarea />
+                          <p className="mt-2 text-xs leading-5 text-blue-700">Optional: use this for context, a lesson, an important fact, or a thoughtful takeaway.</p>
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <FormField label="Image URL" value={section.image} onChange={(value) => updateBlogSection(index, "image", value)} />
+                          <FormField label="Image caption (optional)" value={section.caption} onChange={(value) => updateBlogSection(index, "caption", value)} />
+                        </div>
+                        <FileField
+                          label={`Upload image for section ${index + 1}`}
+                          accept="image/*"
+                          maxSizeInMB={1}
+                          onFileSelect={(dataUrl) => updateBlogSection(index, "image", dataUrl)}
+                          description="Choose a clear image under 1MB. Smaller images allow longer stories with many sections."
+                        />
+                        {section.image ? <p className="text-xs font-bold text-emerald-700">✓ Section image is ready</p> : <p className="text-xs font-bold text-amber-700">An image is required for this section.</p>}
+                      </div>
+                    </fieldset>
+                  ))}
+                </div>
+
+                <div className="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                  <button type="button" onClick={addBlogSection} className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700">+ Add another image and story section</button>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="submit" className="rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800">{editingBlogId ? "Update Story" : "Publish Story"}</button>
+                    {editingBlogId ? <button type="button" onClick={cancelBlogEdit} className="rounded-xl bg-slate-200 px-5 py-3 text-sm font-bold text-slate-700">Cancel</button> : null}
+                  </div>
+                </div>
+              </form>
+
+              <aside className="space-y-4">
+                <div className="rounded-2xl bg-[#071a2f] p-5 text-white">
+                  <p className="text-xs font-bold uppercase tracking-[.25em] text-sky-300">Published stories</p>
+                  <p className="mt-2 text-3xl font-black">{blogs.length}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">Current events, community happenings, and feature stories currently available on the Blog page.</p>
+                </div>
+                {blogs.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">No blog stories yet. Complete the editor to publish your first story.</div>
+                ) : (
+                  blogs.map((item) => (
+                    <div key={item._id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                      <p className="text-xs font-bold uppercase tracking-[.2em] text-red-700">{item.newsStatus && item.newsStatus !== "Standard" ? `${item.newsStatus} · ` : ""}{item.category} · {item.sections?.length || 0} images</p>
+                      <h3 className="mt-2 font-bold text-slate-950">{item.title}</h3>
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{item.excerpt}</p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <button type="button" onClick={() => editBlog(item)} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-slate-700">Edit</button>
+                        <button type="button" onClick={() => deleteBlog(item._id)} className="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-600">Delete</button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </aside>
             </div>
           )}
 

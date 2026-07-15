@@ -3,10 +3,16 @@
 :root {
   --font-space-mono: "Space Mono", monospace;
   --brand-navy: #07111f;
+  --brand-logo-dark: #020712;
   --brand-slate: #0f172a;
+  --brand-primary: #047857;
   --brand-emerald: #10b981;
+  --brand-blue: #0ea5e9;
+  --brand-lime: #65d12e;
+  --brand-mint: #d1fae5;
   --brand-gold: #fbbf24;
-  --surface: #f8fafc;
+  --surface: #f4f7f5;
+  --surface-muted: #eaf2ee;
   --surface-strong: #ffffff;
   --text-main: #0f172a;
   --text-muted: #475569;
@@ -28,7 +34,7 @@ body {
   font-family: var(--font-space-mono, "Space Mono", monospace);
   background:
     radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 24%),
-    linear-gradient(135deg, #f8fafc 0%, #f8fafc 56%, #eef2ff 100%);
+    linear-gradient(135deg, var(--surface) 0%, #f8fafc 56%, var(--surface-muted) 100%);
   color: var(--text-main);
   text-rendering: optimizeLegibility;
   font-weight: 400;
@@ -121,6 +127,35 @@ a {
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(16px);
+}
+
+.brand-page {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(16, 185, 129, 0.07), transparent 22rem),
+    var(--surface);
+}
+
+.brand-hero {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(16, 185, 129, 0.2), transparent 24rem),
+    radial-gradient(circle at 84% 12%, rgba(251, 191, 36, 0.1), transparent 19rem),
+    linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-slate) 58%, #064e3b 100%);
+}
+
+.brand-dark-surface {
+  background-color: var(--brand-navy);
+}
+
+.brand-footer {
+  background: linear-gradient(105deg, #020617 0%, #020817 68%, #00151c 100%);
+}
+
+.brand-accent-bar {
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-emerald), var(--brand-gold));
+}
+
+.brand-kicker {
+  color: var(--brand-primary);
 }
 
 .brand-card {

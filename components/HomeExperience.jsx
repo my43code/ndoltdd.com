@@ -77,7 +77,7 @@ export default function HomeExperience({ services = [], projects = [] }) {
         </div>
       </section>
 
-      <section className="bg-[#f4f5ef] px-4 py-16 sm:px-6 sm:py-24 md:px-8 md:py-32">
+      <section className="brand-page px-4 py-16 sm:px-6 sm:py-24 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="reveal-up grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
             <p className="section-kicker">What we do / 01</p>
@@ -104,7 +104,7 @@ export default function HomeExperience({ services = [], projects = [] }) {
         </div>
       </section>
 
-      <section className="overflow-hidden bg-[#08120f] px-4 py-16 text-white sm:px-6 sm:py-24 md:px-8 md:py-32">
+      <section className="brand-dark-surface overflow-hidden px-4 py-16 text-white sm:px-6 sm:py-24 md:px-8 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><p className="section-kicker text-emerald-300">Selected work / 02</p><h2 className="mt-6 max-w-3xl text-4xl font-black tracking-[-0.045em] sm:text-5xl md:text-7xl">Ideas made tangible.</h2></div><Link href="/contact" className="home-button home-button-outline self-start">Build yours <ArrowRight size={18} /></Link></div>
           <div className="horizontal-gallery mt-14">

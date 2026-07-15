@@ -97,7 +97,7 @@ function SectionCard({ title, description, accent = "emerald" }) {
   const accentStyles =
     accent === "emerald"
       ? "bg-emerald-50 text-emerald-700"
-      : "bg-sky-50 text-sky-700";
+      : "bg-amber-50 text-amber-800";
 
   return (
     <div className="section-card p-7 transition-all duration-300 card-hover animate-fade-in-up">
@@ -242,10 +242,10 @@ export default async function AboutPage() {
   const contact = about.contact || {};
 
   return (
-    <main className="bg-[#f4f5ef]">
-      <section className="relative overflow-hidden bg-slate-950 text-white">
+    <main className="brand-page">
+      <section className="brand-hero relative overflow-hidden text-white">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_22%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.12),transparent_18%),radial-gradient(circle_at_50%_80%,rgba(250,204,21,0.1),transparent_20%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_22%),radial-gradient(circle_at_80%_10%,rgba(52,211,153,0.1),transparent_18%),radial-gradient(circle_at_50%_80%,rgba(250,204,21,0.1),transparent_20%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(130deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.72)_50%,rgba(6,78,59,0.48)_100%)]" />
         </div>
 

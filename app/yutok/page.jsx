@@ -79,7 +79,7 @@ export default function YuTokPage() {
   }
 
   return (
-    <section className="min-h-screen bg-slate-950 text-white">
+    <section className="brand-dark-surface min-h-screen text-white">
       <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6 sm:py-8">
         <div className="mb-5 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
           <div>

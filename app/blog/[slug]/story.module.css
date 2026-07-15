@@ -1,0 +1,42 @@
+.editorialFlow {
+  display: flow-root;
+}
+
+.editorialFigure {
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto 1.75rem;
+}
+
+.storyText p {
+  margin: 0;
+}
+
+.storyText p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  color: #047857;
+  font-size: 3.4em;
+  font-weight: 900;
+  line-height: 0.82;
+}
+
+@media (min-width: 768px) {
+  .editorialFigure {
+    width: 46%;
+    max-width: 28rem;
+    margin-bottom: 1.25rem;
+    shape-outside: inset(0);
+    shape-margin: 1rem;
+  }
+
+  .floatLeft {
+    float: left;
+    margin-right: 2rem;
+  }
+
+  .floatRight {
+    float: right;
+    margin-left: 2rem;
+  }
+}

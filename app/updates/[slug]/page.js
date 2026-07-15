@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Image from "next/image";
+import LiveRelativeTime from "@/components/LiveRelativeTime";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,7 @@ export default async function PostDetailPage({ params }) {
   }
 
   return (
-    <main className="bg-slate-50">
+    <main className="brand-page">
       <div className="border-b border-slate-200 bg-white/80 px-4 py-4 sm:px-6 backdrop-blur">
         <div className="mx-auto max-w-5xl">
           <Link
@@ -56,11 +57,7 @@ export default async function PostDetailPage({ params }) {
             {post.title || "Update"}
           </h1>
           <p className="mt-4 text-base text-slate-600 md:text-lg">
-            {new Date(post.createdAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            Posted <LiveRelativeTime value={post.createdAt} />
           </p>
         </div>
 
