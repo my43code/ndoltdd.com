@@ -20,7 +20,14 @@ const blogSchema = new Schema(
       enum: ["Current event", "Community happening", "Personal story", "Life event", "Fiction"],
       default: "Current event",
     },
-    author: { type: String, default: "NDOLTD Stories", trim: true },
+    author: { type: String, default: "Nexus DevOps", trim: true },
+    authorRole: { type: String, default: "Story contributor", trim: true },
+    authorImage: { type: String, default: "/images/logo.jpg" },
+    authorBio: {
+      type: String,
+      default: "Sharing stories and experiences with the Nexus DevOps community.",
+      trim: true,
+    },
     location: { type: String, default: "", trim: true },
     eventDate: { type: Date, default: null },
     newsStatus: {

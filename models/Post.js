@@ -6,6 +6,15 @@ const postSchema = new Schema(
     summary: { type: String, required: true },
     content: { type: String, required: true },
     image: { type: String, default: "/images/project1.webp" },
+    video: { type: String, default: "" },
+    author: { type: String, default: "Nexus DevOps", trim: true },
+    authorRole: { type: String, default: "Editorial team", trim: true },
+    authorImage: { type: String, default: "/images/logo.jpg" },
+    authorBio: {
+      type: String,
+      default: "Sharing practical insights and updates from Nexus DevOps Limited.",
+      trim: true,
+    },
 
     
  // ✅ ADD THIS BLOCK
@@ -23,6 +32,9 @@ const postSchema = new Schema(
   }
 );
 
-const Post = mongoose.models.Post || mongoose.model("Post", postSchema);
+const Post =
+  process.env.NODE_ENV === "development"
+    ? mongoose.model("Post", postSchema, undefined, { overwriteModels: true })
+    : mongoose.models.Post || mongoose.model("Post", postSchema);
 
 export default Post;

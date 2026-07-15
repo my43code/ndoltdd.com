@@ -4,8 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
 import SlidingShow from "@/components/SlidingShow";
+import AuthorProfile from "@/components/AuthorProfile";
+import FreshMediaSlider from "@/components/FreshMediaSlider";
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
+import Blog from "@/models/Blog";
 
 const fallbackPosts = [
   { _id: "building-better-digital-foundations", href: "/contact", title: "Building better digital foundations", summary: "Why thoughtful structure, strong performance, and clear user journeys matter for growing organisations.", content: "Digital foundations help teams move confidently.", image: "/images/project1.webp", createdAt: new Date("2026-06-18") },
@@ -18,7 +21,7 @@ async function getPosts() {
     await connectMongoDB();
     const posts = await Post.find(
       {},
-      { title: 1, summary: 1, image: 1, slug: 1, content: 1, createdAt: 1 }
+      { title: 1, summary: 1, image: 1, video: 1, slug: 1, content: 1, createdAt: 1, author: 1, authorRole: 1, authorImage: 1, authorBio: 1 }
     )
       .sort({ createdAt: -1 })
       .limit(8)
@@ -32,12 +35,70 @@ async function getPosts() {
   }
 }
 
+async function getFreshBlogs() {
+  try {
+    await connectMongoDB();
+    return await Blog.find(
+      {},
+      { title: 1, excerpt: 1, slug: 1, sections: 1, createdAt: 1 }
+    )
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .lean();
+  } catch (error) {
+    if (process.env.npm_lifecycle_event !== "build") {
+      console.error("Failed to load fresh Blog media:", error);
+    }
+    return [];
+  }
+}
+
 export default async function UpdatesPage() {
-  const data = await getPosts();
+  const [data, freshBlogs] = await Promise.all([getPosts(), getFreshBlogs()]);
   const livePosts = data?.posts || [];
   const posts = livePosts.length ? livePosts : fallbackPosts;
   const featuredPost = posts[0] || null;
   const feedPosts = posts.slice(1);
+  const freshMedia = [
+    ...livePosts
+      .filter((post) => post.video || post.image)
+      .map((post) => ({
+        id: `post-${post._id}`,
+        title: post.title,
+        subtitle: post.summary,
+        image: post.image,
+        video: post.video,
+        href: `/updates/${post.slug || post._id}`,
+        source: "Update",
+        createdAt: post.createdAt,
+      })),
+    ...freshBlogs
+      .map((story) => {
+        const leadMedia = story.sections?.find((section) => section.image);
+        if (!leadMedia) return null;
+        return {
+          id: `blog-${story._id}`,
+          title: story.title,
+          subtitle: story.excerpt,
+          image: leadMedia.image,
+          href: `/blog/${story.slug}`,
+          source: "Blog",
+          createdAt: story.createdAt,
+        };
+      })
+      .filter(Boolean),
+  ]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 8)
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      subtitle: item.subtitle,
+      image: item.image,
+      video: item.video || "",
+      href: item.href,
+      source: item.source,
+    }));
 
   const readingTime = (post) =>
     Math.max(1, Math.ceil(((post?.content || post?.summary || "").length || 240) / 900));
@@ -107,16 +168,15 @@ export default async function UpdatesPage() {
                   </p>
 
                   <div className="mt-10 flex flex-col gap-5 border-t border-slate-800/80 pt-8 md:flex-row md:items-center md:justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-3xl border border-white/10 bg-white/10 text-sm font-bold text-white">
-                        ND
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-slate-300">Nexus DevOps</p>
-                        <p className="mt-1 text-sm text-slate-400">
-                          {`${readingTime(featuredPost)} min read`}
-                        </p>
-                      </div>
+                    <div>
+                      <AuthorProfile
+                        name={featuredPost.author || "Nexus DevOps"}
+                        role={featuredPost.authorRole || "Editorial team"}
+                        image={featuredPost.authorImage || "/images/logo.jpg"}
+                        bio={featuredPost.authorBio || "Sharing practical insights and updates from Nexus DevOps Limited."}
+                        theme="dark"
+                      />
+                      <p className="mt-2 pl-2 text-sm text-slate-400">{`${readingTime(featuredPost)} min read`}</p>
                     </div>
 
                     <Link
@@ -178,6 +238,23 @@ export default async function UpdatesPage() {
             </section>
           </div>
         </div>
+
+        {freshMedia.length ? (
+          <section className="mt-14 border-t border-slate-300 pt-10 sm:mt-20 sm:pt-14">
+            <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-700">Fresh media</p>
+                <h2 className="mt-3 max-w-3xl text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
+                  Latest videos and images from our posts and stories.
+                </h2>
+              </div>
+              <p className="max-w-sm text-sm leading-7 text-slate-600">
+                Automatically refreshed from the newest Updates and Blog publications.
+              </p>
+            </div>
+            <FreshMediaSlider items={freshMedia} />
+          </section>
+        ) : null}
       </section>
     </main>
   );

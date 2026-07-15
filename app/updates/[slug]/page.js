@@ -5,6 +5,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Image from "next/image";
 import LiveRelativeTime from "@/components/LiveRelativeTime";
+import AuthorProfile from "@/components/AuthorProfile";
 
 export const dynamic = "force-dynamic";
 
@@ -56,9 +57,17 @@ export default async function PostDetailPage({ params }) {
           <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
             {post.title || "Update"}
           </h1>
-          <p className="mt-4 text-base text-slate-600 md:text-lg">
-            Posted <LiveRelativeTime value={post.createdAt} />
-          </p>
+          <div className="mt-6 flex flex-col gap-4 border-y border-slate-200 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <AuthorProfile
+              name={post.author || "Nexus DevOps"}
+              role={post.authorRole || "Editorial team"}
+              image={post.authorImage || "/images/logo.jpg"}
+              bio={post.authorBio || "Sharing practical insights and updates from Nexus DevOps Limited."}
+            />
+            <p className="text-sm text-slate-600 sm:text-right">
+              Posted <LiveRelativeTime value={post.createdAt} />
+            </p>
+          </div>
         </div>
 
         {post.image ? (

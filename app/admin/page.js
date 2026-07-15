@@ -28,6 +28,11 @@ const emptyPost = {
   summary: "",
   content: "",
   image: "/images/project1.webp",
+  video: "",
+  author: "Nexus DevOps",
+  authorRole: "Editorial team",
+  authorImage: "/images/logo.jpg",
+  authorBio: "Sharing practical insights and updates from Nexus DevOps Limited.",
 };
 
 const emptyBlogSection = () => ({
@@ -42,7 +47,10 @@ const createEmptyBlog = () => ({
   title: "",
   excerpt: "",
   category: "Current event",
-  author: "NDOLTD Stories",
+  author: "Nexus DevOps",
+  authorRole: "Story contributor",
+  authorImage: "/images/logo.jpg",
+  authorBio: "Sharing stories and experiences with the Nexus DevOps community.",
   location: "",
   eventDate: "",
   newsStatus: "Standard",
@@ -544,6 +552,11 @@ export default function AdminPage() {
       summary: item.summary || "",
       content: item.content || "",
       image: item.image || "",
+      video: item.video || "",
+      author: item.author || "Nexus DevOps",
+      authorRole: item.authorRole || "Editorial team",
+      authorImage: item.authorImage || "/images/logo.jpg",
+      authorBio: item.authorBio || "Sharing practical insights and updates from Nexus DevOps Limited.",
     });
     setStatus("");
   }
@@ -557,21 +570,28 @@ export default function AdminPage() {
     e.preventDefault();
     if (!editingPostId) return;
 
-    const res = await fetch(`/api/posts/${editingPostId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(postForm),
-      credentials: "include",
-    });
+    setStatus("Updating post...");
 
-    if (res.ok) {
-      setStatus("Post updated.");
-      setEditingPostId(null);
-      setPostForm(emptyPost);
-      await loadData();
-    } else {
+    try {
+      const res = await fetch(`/api/posts/${editingPostId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(postForm),
+        credentials: "include",
+      });
       const errorData = await res.json();
-      setStatus(errorData.message || "Failed to update post.");
+
+      if (res.ok) {
+        setStatus("Post updated.");
+        setEditingPostId(null);
+        setPostForm(emptyPost);
+        await loadData();
+      } else {
+        setStatus(errorData.message || errorData.error || "Failed to update post.");
+      }
+    } catch (error) {
+      console.error("Failed to update post:", error);
+      setStatus("Could not update the post. Check your connection and try again.");
     }
   }
 
@@ -668,7 +688,10 @@ export default function AdminPage() {
       title: item.title || "",
       excerpt: item.excerpt || "",
       category: item.category || "Current event",
-      author: item.author || "NDOLTD Stories",
+      author: item.author || "Nexus DevOps",
+      authorRole: item.authorRole || "Story contributor",
+      authorImage: item.authorImage || "/images/logo.jpg",
+      authorBio: item.authorBio || "Sharing stories and experiences with the Nexus DevOps community.",
       location: item.location || "",
       eventDate: toDateTimeLocal(item.eventDate),
       newsStatus: item.newsStatus || "Standard",
@@ -1108,6 +1131,36 @@ export default function AdminPage() {
                   value={postForm.title}
                   onChange={(v) => setPostForm({ ...postForm, title: v })}
                 />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <FormField
+                    label="Author name"
+                    value={postForm.author}
+                    onChange={(v) => setPostForm({ ...postForm, author: v })}
+                  />
+                  <FormField
+                    label="Author role"
+                    value={postForm.authorRole}
+                    onChange={(v) => setPostForm({ ...postForm, authorRole: v })}
+                  />
+                </div>
+                <FormField
+                  label="Author profile image URL"
+                  value={postForm.authorImage}
+                  onChange={(v) => setPostForm({ ...postForm, authorImage: v })}
+                />
+                <FileField
+                  label="Upload author profile image"
+                  accept="image/*"
+                  onFileSelect={(dataUrl) => setPostForm({ ...postForm, authorImage: dataUrl })}
+                  description="Upload a square portrait for the clickable author profile."
+                  maxSizeInMB={2}
+                />
+                <FormField
+                  label="Author biography"
+                  value={postForm.authorBio}
+                  onChange={(v) => setPostForm({ ...postForm, authorBio: v })}
+                  textarea
+                />
                 <FormField
                   label="Summary"
                   value={postForm.summary}
@@ -1130,6 +1183,18 @@ export default function AdminPage() {
                   accept="image/*"
                   onFileSelect={(dataUrl) => setPostForm({ ...postForm, image: dataUrl })}
                   description="Tap Browse to select an image from your device."
+                />
+                <FormField
+                  label="Video URL (optional)"
+                  value={postForm.video}
+                  onChange={(v) => setPostForm({ ...postForm, video: v })}
+                />
+                <FileField
+                  label="Upload Video (optional)"
+                  accept="video/*"
+                  onFileSelect={(dataUrl) => setPostForm({ ...postForm, video: dataUrl })}
+                  description="Optional: add a short MP4 or WebM video for the fresh-media slider."
+                  maxSizeInMB={10}
                 />
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -1202,6 +1267,20 @@ export default function AdminPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField label="Story title" value={blogForm.title} onChange={(value) => setBlogForm({ ...blogForm, title: value })} />
                   <FormField label="Author" value={blogForm.author} onChange={(value) => setBlogForm({ ...blogForm, author: value })} />
+                  <FormField label="Author role" value={blogForm.authorRole} onChange={(value) => setBlogForm({ ...blogForm, authorRole: value })} />
+                  <FormField label="Author profile image URL" value={blogForm.authorImage} onChange={(value) => setBlogForm({ ...blogForm, authorImage: value })} />
+                  <div className="md:col-span-2">
+                    <FileField
+                      label="Upload author profile image"
+                      accept="image/*"
+                      onFileSelect={(dataUrl) => setBlogForm({ ...blogForm, authorImage: dataUrl })}
+                      description="Upload a square portrait for the clickable author profile."
+                      maxSizeInMB={2}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <FormField label="Author biography" value={blogForm.authorBio} onChange={(value) => setBlogForm({ ...blogForm, authorBio: value })} textarea />
+                  </div>
                   <div className="space-y-2">
                     <label className="block text-sm font-semibold text-slate-700">Story type</label>
                     <select value={blogForm.category} onChange={(event) => setBlogForm({ ...blogForm, category: event.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm text-slate-900 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base">

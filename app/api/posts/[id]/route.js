@@ -11,7 +11,7 @@ export async function PUT(request, { params }) {
 
   try {
     const { id } = await params;
-    const { title, summary, content, image } = await request.json();
+    const { title, summary, content, image, author, authorRole, authorImage, authorBio } = await request.json();
 
     if (!id) {
       return NextResponse.json(
@@ -138,6 +138,7 @@ export async function DELETE(request, { params }) {
 
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
+import slugify from "slugify";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidateSite } from "@/lib/revalidateSite";
@@ -148,7 +149,7 @@ export async function PUT(request, { params }) {
 
   try {
     const { id } = await params;
-    const { title, summary, content, image } = await request.json();
+    const { title, summary, content, image, video, author, authorRole, authorImage, authorBio } = await request.json();
 
     if (!id) {
       return NextResponse.json({ message: "Missing post id" }, { status: 400 });
@@ -166,7 +167,7 @@ export async function PUT(request, { params }) {
     const baseSlug = slugify(title, {
       lower: true,
       strict: true,
-    });
+    }) || "post";
 
     let uniqueSlug = baseSlug;
     let count = 1;
@@ -183,7 +184,18 @@ export async function PUT(request, { params }) {
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { title, summary, content, image, slug: uniqueSlug },
+      {
+        title,
+        summary,
+        content,
+        image,
+        video: video?.trim() || "",
+        author: author?.trim() || "Nexus DevOps",
+        authorRole: authorRole?.trim() || "Editorial team",
+        authorImage: authorImage?.trim() || "/images/logo.jpg",
+        authorBio: authorBio?.trim() || "Sharing practical insights and updates from Nexus DevOps Limited.",
+        slug: uniqueSlug,
+      },
       { new: true, runValidators: true }
     );
 

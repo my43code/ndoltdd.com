@@ -28,7 +28,7 @@ export async function POST(request) {
   if (authError) return authError;
 
   try {
-    const { title, summary, content, image } = await request.json();
+    const { title, summary, content, image, author, authorRole, authorImage, authorBio } = await request.json();
 
     if (!title || !summary || !content) {
       return NextResponse.json(
@@ -59,6 +59,10 @@ export async function POST(request) {
       summary,
       content,
       image,
+      author: author?.trim() || "Nexus DevOps",
+      authorRole: authorRole?.trim() || "Editorial team",
+      authorImage: authorImage?.trim() || "/images/logo.jpg",
+      authorBio: authorBio?.trim() || "Sharing practical insights and updates from Nexus DevOps Limited.",
       slug: uniqueSlug,
     });
 
@@ -418,7 +422,7 @@ export async function POST(request) {
   if (authError) return authError;
 
   try {
-    const { title, summary, content, image } = await request.json();
+    const { title, summary, content, image, video, author, authorRole, authorImage, authorBio } = await request.json();
 
     if (!title || !summary || !content) {
       return NextResponse.json(
@@ -447,6 +451,11 @@ export async function POST(request) {
       summary,
       content,
       image,
+      video: video?.trim() || "",
+      author: author?.trim() || "Nexus DevOps",
+      authorRole: authorRole?.trim() || "Editorial team",
+      authorImage: authorImage?.trim() || "/images/logo.jpg",
+      authorBio: authorBio?.trim() || "Sharing practical insights and updates from Nexus DevOps Limited.",
       slug: uniqueSlug,
     });
 

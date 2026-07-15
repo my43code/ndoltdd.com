@@ -4,6 +4,7 @@ import BlogImage from "@/components/BlogImage";
 import { connectMongoDB } from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import styles from "./story.module.css";
+import AuthorProfile from "@/components/AuthorProfile";
 
 export const dynamic = "force-dynamic";
 
@@ -108,9 +109,14 @@ export default async function BlogStoryPage({ params }) {
           <h1 className="mt-5 max-w-5xl text-4xl font-black leading-[1.03] tracking-[-.045em] text-slate-950 sm:text-6xl md:text-7xl">{story.title}</h1>
           <p className="mt-6 max-w-4xl text-lg font-semibold leading-8 text-slate-700 md:text-2xl md:leading-10">{story.excerpt}</p>
 
-          <div className="mt-7 border-y border-slate-200 py-5">
-            <p className="font-bold text-slate-950">By {story.author}</p>
-            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500">
+          <div className="mt-7 flex flex-col gap-4 border-y border-slate-200 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <AuthorProfile
+              name={story.author || "Nexus DevOps"}
+              role={story.authorRole || "Story contributor"}
+              image={story.authorImage || "/images/logo.jpg"}
+              bio={story.authorBio || "Sharing stories and experiences with the Nexus DevOps community."}
+            />
+            <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500 sm:max-w-md sm:justify-end sm:text-right">
               <time>Published {formatDateTime(story.createdAt)}</time>
               {wasUpdated ? <time>Updated {formatDateTime(story.updatedAt)}</time> : null}
             </div>
