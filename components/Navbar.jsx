@@ -35,7 +35,7 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className={`group relative rounded-full px-4 py-2 text-sm transition duration-300 hover:bg-white hover:text-slate-950 animate-fade-in-down ${isActive(link.href) ? "brand-dark-surface text-white shadow-lg" : "text-slate-600"}`}
+              className={`group relative rounded-full px-4 py-2 text-sm transition duration-300 hover:bg-emerald-50 hover:text-emerald-800 animate-fade-in-down ${isActive(link.href) ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 hover:text-white" : "text-slate-600"}`}
               style={{ animationDelay: `${idx * 0.05}s` }}
             >
               {link.name}
@@ -61,7 +61,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`rounded-2xl px-4 py-3 text-base font-medium transition hover:bg-emerald-50 hover:text-emerald-700 animate-slide-in-left ${isActive(link.href) ? "brand-dark-surface text-white" : "text-slate-700"}`}
+                className={`rounded-2xl px-4 py-3 text-base font-medium transition hover:bg-emerald-50 hover:text-emerald-800 animate-slide-in-left ${isActive(link.href) ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/15 hover:bg-emerald-500 hover:text-white" : "text-slate-700"}`}
                 style={{ animationDelay: `${idx * 0.05}s` }}
                 onClick={() => setIsOpen(false)}
               >

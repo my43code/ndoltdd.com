@@ -1,5 +1,4 @@
 import HomeExperience from "@/components/HomeExperience";
-import FloatingActions from "@/components/FloatingActions";
 import { connectMongoDB } from "@/lib/mongodb";
 import Service from "@/models/Service";
 import Project from "@/models/Project";
@@ -16,5 +15,5 @@ async function loadModel(Model) {
 
 export default async function HomePage() {
   const [services, projects] = await Promise.all([loadModel(Service), loadModel(Project)]);
-  return <main><FloatingActions /><HomeExperience services={services} projects={projects} /></main>;
+  return <main><HomeExperience services={services} projects={projects} /></main>;
 }

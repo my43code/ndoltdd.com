@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
 import SiteMotion from "@/components/SiteMotion";
+import FloatingActions from "@/components/FloatingActions";
 
 export const revalidate = 3600;
 
@@ -61,6 +62,7 @@ export default async function RootLayout({ children }) {
           <SiteMotion />
           <Navbar />
           <main className="flex-grow">{children}</main>
+          <FloatingActions />
           <Footer />
         </AuthProvider>
       </body>
