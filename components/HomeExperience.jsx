@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight, Grid2X2, List, MonitorSmartphone, Pause, Play, ShieldCheck, Sparkles, Wrench } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink, Grid2X2, List, MonitorSmartphone, Pause, Play, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 
 const fallbackSlides = [
   { id: "design", title: "Digital experiences that move business forward.", subtitle: "Modern websites, applications and systems designed for Papua New Guinea's ambitious organisations.", image: "/images/project1.webp", badge: "Design & development" },
@@ -18,6 +18,22 @@ const fallbackServices = [
 ];
 
 const icons = { monitor: MonitorSmartphone, sparkles: Sparkles, shield: ShieldCheck };
+
+function getPublishedWebsite(link) {
+  if (!link) return null;
+
+  try {
+    const url = new URL(link);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+
+    return {
+      href: url.href,
+      domain: url.hostname.replace(/^www\./, ""),
+    };
+  } catch {
+    return null;
+  }
+}
 
 export default function HomeExperience({ services = [], projects = [] }) {
   const slides = useMemo(() => {
@@ -108,7 +124,35 @@ export default function HomeExperience({ services = [], projects = [] }) {
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><p className="section-kicker text-emerald-300">Selected work / 02</p><h2 className="mt-6 max-w-3xl text-4xl font-black tracking-[-0.045em] sm:text-5xl md:text-7xl">Ideas made tangible.</h2></div><Link href="/contact" className="home-button home-button-outline self-start">Build yours <ArrowRight size={18} /></Link></div>
           <div className="horizontal-gallery mt-14">
-            {work.slice(0, 6).map((project, index) => <article className="work-card" key={project.id}><div className="relative h-[360px] overflow-hidden md:h-[470px]"><Image src={project.image || fallbackSlides[index % 3].image} alt={project.title} fill sizes="(max-width: 768px) 86vw, 52vw" className="object-cover" /><div className="work-overlay" /></div><div className="flex items-start justify-between gap-5 p-6"><div><p className="text-xs uppercase tracking-[.24em] text-emerald-300">Project 0{index + 1}</p><h3 className="mt-3 text-2xl font-bold">{project.title}</h3><p className="mt-3 max-w-xl leading-7 text-slate-400">{project.description}</p></div><ArrowRight className="mt-2 shrink-0" /></div></article>)}
+            {work.slice(0, 6).map((project, index) => {
+              const website = getPublishedWebsite(project.link);
+
+              return (
+                <article className="work-card" key={project.id}>
+                  <div className="relative h-[360px] overflow-hidden md:h-[470px]">
+                    <Image src={project.image || fallbackSlides[index % 3].image} alt={project.title} fill sizes="(max-width: 768px) 86vw, 52vw" className="object-cover" />
+                    <div className="work-overlay" />
+                  </div>
+                  <div className="p-6">
+                    <p className="text-xs uppercase tracking-[.24em] text-emerald-300">Project 0{index + 1}</p>
+                    <h3 className="mt-3 text-2xl font-bold">{project.title}</h3>
+                    <p className="mt-3 max-w-xl leading-7 text-slate-400">{project.description}</p>
+                    {website ? (
+                      <a
+                        href={website.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-5 inline-flex min-h-11 max-w-full items-center gap-2 rounded-full bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-emerald-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300"
+                        aria-label={`Visit ${project.title} website at ${website.domain} (opens in a new tab)`}
+                      >
+                        <span className="truncate">Visit {website.domain}</span>
+                        <ExternalLink className="shrink-0" size={16} aria-hidden="true" />
+                      </a>
+                    ) : null}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>

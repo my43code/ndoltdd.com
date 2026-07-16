@@ -2,8 +2,13 @@
 
 import Link from "next/link";
 import { Search, MessageCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function FloatingActions() {
+  const pathname = usePathname();
+
+  if (pathname === "/yutok") return null;
+
   return (
     <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       <Link
