@@ -5,12 +5,24 @@ import { connectMongoDB } from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import styles from "./story.module.css";
 import AuthorProfile from "@/components/AuthorProfile";
+import { cache } from "react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const NEWS_CATEGORIES = new Set(["Current event", "Community happening"]);
 
-async function getBlog(slug) {
+export async function generateStaticParams() {
+  try {
+    await connectMongoDB();
+    const stories = await Blog.find({}, { slug: 1, _id: 0 }).lean();
+    return stories.filter((story) => story.slug).map((story) => ({ slug: story.slug }));
+  } catch (error) {
+    if (process.env.npm_lifecycle_event !== "build") console.error("Failed to preload blog routes:", error);
+    return [];
+  }
+}
+
+const getBlog = cache(async (slug) => {
   try {
     await connectMongoDB();
     return await Blog.findOne({ slug }).lean();
@@ -18,7 +30,7 @@ async function getBlog(slug) {
     if (process.env.npm_lifecycle_event !== "build") console.error("Failed to load blog story:", error);
     return null;
   }
-}
+});
 
 function formatDateTime(value) {
   if (!value) return "";

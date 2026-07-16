@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, BadgeCheck, Layers3, Sparkles, Users2, Mail, Phone, Link2 } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import ServiceCard from "@/components/ServiceCard";
@@ -10,7 +11,7 @@ import Project from "@/models/Project";
 import Post from "@/models/Post";
 import Service from "@/models/Service";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const aboutFallbackServices = [
   { _id: "about-web", title: "Web & App Development", shortDescription: "Digital experiences designed to be fast, clear, and useful.", image: "/images/project1.webp", link: "/services" },
@@ -164,10 +165,13 @@ function TeamCard({ member }) {
     <article className="group overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)]">
       {member?.image ? (
         <div className="relative aspect-[4/5] overflow-hidden bg-slate-100">
-          <img
+          <Image
             src={member.image}
             alt={member?.name || "Team member"}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            unoptimized={member.image.startsWith("data:")}
+            className="object-cover transition duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/15 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-5">

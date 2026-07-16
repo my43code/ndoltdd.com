@@ -1,11 +1,31 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 export default function SiteMotion() {
   const glow = useRef(null);
   const pathname = usePathname();
+  const [navigationFrom, setNavigationFrom] = useState(null);
+  const isNavigating = navigationFrom === pathname;
+
+  useEffect(() => {
+    const startNavigation = (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      const link = event.target.closest("a[href]");
+      if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+
+      const destination = new URL(link.href, window.location.href);
+      if (destination.origin !== window.location.origin) return;
+      if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
+
+      setNavigationFrom(pathname);
+    };
+
+    document.addEventListener("click", startNavigation);
+    return () => document.removeEventListener("click", startNavigation);
+  }, [pathname]);
 
   useEffect(() => {
     const targets = document.querySelectorAll("main section, main article, main .section-card");
@@ -29,5 +49,14 @@ export default function SiteMotion() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
 
-  return <div ref={glow} className="site-cursor-glow" aria-hidden="true" />;
+  return (
+    <>
+      <div ref={glow} className="site-cursor-glow" aria-hidden="true" />
+      {isNavigating ? (
+        <div className="route-progress" role="status" aria-label="Opening page">
+          <span />
+        </div>
+      ) : null}
+    </>
+  );
 }

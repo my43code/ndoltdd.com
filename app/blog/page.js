@@ -5,7 +5,7 @@ import LiveRelativeTime from "@/components/LiveRelativeTime";
 import { connectMongoDB } from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata = {
   title: "Inspiring Stories, Fiction and Experiences",
