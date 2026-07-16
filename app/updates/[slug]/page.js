@@ -7,18 +7,7 @@ import Image from "next/image";
 import LiveRelativeTime from "@/components/LiveRelativeTime";
 import AuthorProfile from "@/components/AuthorProfile";
 
-export const revalidate = 300;
-
-export async function generateStaticParams() {
-  try {
-    await connectMongoDB();
-    const posts = await Post.find({}, { slug: 1, _id: 1 }).lean();
-    return posts.map((post) => ({ slug: post.slug || String(post._id) }));
-  } catch (error) {
-    if (process.env.npm_lifecycle_event !== "build") console.error("Failed to preload update routes:", error);
-    return [];
-  }
-}
+export const dynamic = "force-dynamic";
 
 async function getPost(slug) {
   try {

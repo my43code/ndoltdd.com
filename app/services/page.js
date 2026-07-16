@@ -6,7 +6,7 @@ import MediaFrame from "@/components/MediaFrame";
 import { connectMongoDB } from "@/lib/mongodb";
 import Service from "@/models/Service";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const fallbackServices = [
   { _id: "web-development", title: "Web & App Development", shortDescription: "Fast, accessible websites and applications built around your customers and business goals.", image: "/images/project1.webp", link: "/contact" },

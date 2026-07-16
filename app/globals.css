@@ -311,15 +311,12 @@ a {
 .cta-word { position:absolute; right:-2vw; top:50%; transform:translateY(-50%); font-size:clamp(8rem,25vw,25rem); line-height:1; font-weight:900; letter-spacing:-.08em; color:rgba(3,46,35,.08); pointer-events:none; }
 @keyframes hero-enter { from { opacity:0; transform:translateY(28px); filter:blur(5px); } to { opacity:1; transform:none; filter:none; } }
 @keyframes orb-drift { to { transform:translate3d(30px,-25px,0) scale(1.12); } }
-@keyframes route-progress { 0% { transform:translateX(-110%); } 55% { width:60%; } 100% { transform:translateX(240%); width:45%; } }
 @media (min-width:768px) { .service-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (min-width:1024px) { .service-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media (max-width:640px) { .service-list .service-tile { grid-template-columns:1fr; }.service-list .service-image { min-height:13rem; }.service-list .service-content { padding:1.4rem; }.hero-overlay { background:linear-gradient(0deg,rgba(2,10,8,.98) 0%,rgba(2,10,8,.7) 65%,rgba(2,10,8,.35) 100%); }.home-button { min-height:3rem; }.slider-control { width:2.65rem; height:2.65rem; }.work-card > div:last-child { padding:1.25rem; } }
 
 /* Shared route motion and richer interaction */
 .site-cursor-glow { position:fixed; z-index:60; width:360px; height:360px; left:0; top:0; border-radius:999px; background:radial-gradient(circle,rgba(52,211,153,.09),transparent 68%); pointer-events:none; mix-blend-mode:multiply; transition:opacity .3s ease; will-change:transform; }
-.route-progress { position:fixed; z-index:100; inset:0 0 auto; height:3px; overflow:hidden; background:rgba(16,185,129,.16); pointer-events:none; }
-.route-progress span { display:block; width:45%; height:100%; border-radius:999px; background:linear-gradient(90deg,#34d399,#10b981,#facc15); box-shadow:0 0 16px rgba(16,185,129,.75); animation:route-progress 1s ease-in-out infinite; }
 .scroll-reveal { opacity:0; transform:translateY(26px); transition:opacity .75s cubic-bezier(.2,.8,.2,1) var(--reveal-delay,0ms),transform .75s cubic-bezier(.2,.8,.2,1) var(--reveal-delay,0ms); }
 .scroll-reveal.is-visible { opacity:1; transform:none; }
 .login-panel { position:relative; overflow:hidden; transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease; }
