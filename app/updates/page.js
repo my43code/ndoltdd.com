@@ -2,10 +2,10 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Image from "next/image";
-import PostCard from "@/components/PostCard";
 import SlidingShow from "@/components/SlidingShow";
 import AuthorProfile from "@/components/AuthorProfile";
 import FreshMediaSlider from "@/components/FreshMediaSlider";
+import UpdateFeedExplorer from "@/components/UpdateFeedExplorer";
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Blog from "@/models/Blog";
@@ -102,6 +102,16 @@ export default async function UpdatesPage() {
 
   const readingTime = (post) =>
     Math.max(1, Math.ceil(((post?.content || post?.summary || "").length || 240) / 900));
+  const explorerPosts = feedPosts.map((post, index) => ({
+    id: String(post._id || index),
+    href: post.href || `/updates/${post.slug || post._id}`,
+    slug: post.slug || "",
+    title: post.title || "Update",
+    summary: post.summary || "A fresh update from our team.",
+    content: post.content || "",
+    image: post.image || "/images/project1.webp",
+    createdAt: new Date(post.createdAt || "2026-01-01T00:00:00.000Z").toISOString(),
+  }));
 
   return (
     <main className="brand-page">
@@ -207,34 +217,8 @@ export default async function UpdatesPage() {
           </article>
 
           <div>
-            <section className="rounded-[2rem] border border-slate-200 bg-white/80 p-5 shadow-[0_20px_50px_-30px_rgba(15,23,42,0.18)] backdrop-blur sm:p-6 md:p-8">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700">
-                    Fresh
-                  </p>
-                  <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950">
-                    The Latest Feed
-                  </h2>
-                </div>
-                <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-slate-500">
-                  New
-                </span>
-              </div>
-
-              <ul className="mt-8 space-y-4" aria-label="Latest updates">
-                {feedPosts.length > 0 ? (
-                  feedPosts.map((post) => (
-                    <li key={post._id}>
-                      <PostCard post={post} variant="list" />
-                    </li>
-                  ))
-                ) : (
-                  <li className="rounded-[1.75rem] border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-slate-500">
-                    No recent feed items to display.
-                  </li>
-                )}
-              </ul>
+            <section className="rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-[0_20px_50px_-30px_rgba(15,23,42,0.18)] backdrop-blur sm:p-6 md:p-8">
+              <UpdateFeedExplorer posts={explorerPosts} />
             </section>
           </div>
         </div>
